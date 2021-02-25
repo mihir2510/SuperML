@@ -1,12 +1,12 @@
 from sklearn.decomposition import PCA
 from data_preprocessing.preprocessing import get_features
-
 import pandas as pd
 
 
 # The number of features in PCA is estimated with the help of Minka's 
 # MLE - Most Likelihood Estimation
-def featureEngineering_PCA(dataset, features):
+def featureEngineering_PCA(dataset, label):
+    features = get_features(dataset, label)
     X = dataset[features]
     pca = PCA(n_components='mle', svd_solver='auto')
     X = pca.fit_transform(X)
