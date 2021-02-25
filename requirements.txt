@@ -1,2 +1,5 @@
 imblearn
 pandas
+scikit-optimize
+hyperopt
+scikit-learn==0.23.1

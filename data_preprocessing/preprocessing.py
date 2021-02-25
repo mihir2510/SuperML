@@ -1,18 +1,14 @@
 from sklearn.preprocessing import LabelEncoder
 from imblearn.over_sampling import RandomOverSampler
+from utils import get_features
 import pandas as pd
 
-def get_features(dataset,label):
-    
-    #extracting features from dataset
-    features = list(dataset.columns)
-    features.remove(label)
-    return features
+
 
 def remove_null(dataset,label):
 
     #get features
-    features=get_features(dataset,label)
+    features = get_features(dataset,label)
     
     # Removing Columns with more than 50% null data
     for feature in features:
@@ -22,6 +18,10 @@ def remove_null(dataset,label):
 
     # Removing rows having null values
     dataset.dropna(inplace=True)
+
+    if 'Unnamed: 0' in dataset.columns:
+        dataset.drop(['Unnamed: 0'],axis=1,inplace=True)
+
     return dataset
     
 def label_encode(dataset,label):
@@ -37,6 +37,9 @@ def label_encode(dataset,label):
     #for label
     if dataset[label].dtype == object:
         dataset[label] = LabelEncoder().fit_transform(dataset[label])
+        
+    if 'Unnamed: 0' in dataset.columns:
+        dataset.drop(['Unnamed: 0'],axis=1,inplace=True)
     return dataset
 
 def oversampling(dataset, label):

@@ -1,5 +1,5 @@
 from sklearn.decomposition import PCA
-from data_preprocessing.preprocessing import get_features
+from utils import *
 import pandas as pd
 
 

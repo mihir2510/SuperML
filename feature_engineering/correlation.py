@@ -1,4 +1,4 @@
-from data_preprocessing.preprocessing import get_features
+from utils import *
 import numpy as np
 
 def correlation(dataset,label,threshold=0.90):

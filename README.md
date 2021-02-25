@@ -19,7 +19,7 @@
     Parameters
     --------
     - dataset : Pandas Dataframe
-    Dataset containing features *AND* labels
+    Dataset containing features  **AND** labels
     - label : String 
     Column name of label
 
@@ -32,7 +32,7 @@ label_encode
     Parameters
     --------
     - dataset : Pandas Dataframe
-    Dataset containing features *AND* labels
+    Dataset containing features **AND** labels
     - label : String 
     Column name of label
 
@@ -68,7 +68,7 @@ HPO
     - label : String 
     Column name of label
     - Model name : String
-    - Method name : String ['all', 'grid', 'random', 'bayesian']
+    - Method name : String ['all', 'grid', 'random', 'bayesian-gp','bayesian-tpe']
     - Time taken?
 
     Returns

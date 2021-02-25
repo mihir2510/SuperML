@@ -1,4 +1,4 @@
-from data_preprocessing.preprocessing import get_features
+from utils import *
 from sklearn.feature_selection import SelectFromModel
 import pandas as pd
 
