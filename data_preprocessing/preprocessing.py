@@ -9,7 +9,7 @@ def get_features(dataset,label):
     features.remove(label)
     return features
 
-def removenull(dataset,label):
+def remove_null(dataset,label):
 
     #get features
     features=get_features(dataset,label)
@@ -24,7 +24,7 @@ def removenull(dataset,label):
     dataset.dropna(inplace=True)
     return dataset
     
-def labelencode(dataset,label):
+def label_encode(dataset,label):
     #get features
     features = get_features(dataset,label)
     
