@@ -1,9 +1,17 @@
 from sklearn.preprocessing import LabelEncoder
 from imblearn.over_sampling import RandomOverSampler
+from imblearn.under_sampling import RandomUnderSampler
 from utils import get_features
+from sklearn.model_selection import train_test_split
 import pandas as pd
 
-
+def preprocess_data(dataset,label, task='classification'):
+    dataset = remove_null(dataset,label)
+    dataset = label_encode(dataset,label) 
+    # if task == 'classification':
+    #     dataset = oversampling(dataset,label)
+    return dataset
+    # return oversampling(label_encode(remove_null(dataset,label),label),label)
 
 def remove_null(dataset,label):
 
@@ -45,15 +53,22 @@ def label_encode(dataset,label):
 def oversampling(dataset, label):
     #get features
     features = get_features(dataset,label)
-
-    if len(dataset) <=1500:
+    new_dataset = None
+    if True:
         oversampler=RandomOverSampler()
         X,Y=oversampler.fit_resample(dataset[features],dataset[label])
 
-        X=pd.DataFrame(X,columns=features)
-        Y=pd.DataFrame(Y,columns=dataset[label])
+        new_dataset = pd.DataFrame(X,columns=features)
+        new_dataset[label] = pd.DataFrame(Y)
+    else:
+        new_dataset = dataset
+    if 'Unnamed: 0' in new_dataset.columns:
+        new_dataset.drop(['Unnamed: 0'],axis=1,inplace=True)
+    
+    return new_dataset
 
-    if 'Unnamed: 0' in X.columns:
-        X.drop(['Unnamed: 0'],axis=1,inplace=True)
-
-    return X,Y
+def dataset_split(dataset,label, test_size=0.3, random_state = 1):
+    features = get_features(dataset, label)
+    X, Y = dataset[features], dataset[label]
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state=random_state)
+    return X_train, X_test, Y_train, Y_test

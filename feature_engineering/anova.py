@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from math import ceil, sqrt, log2
 
-def anova_regressor(dataset,label,modelClass):
+def anova_regressor(dataset,label,modelClass=RandomForestRegressor):
     features = get_features(dataset, label)
     n = len(features)
     # List containing the different values to consider as K
@@ -28,18 +28,19 @@ def anova_regressor(dataset,label,modelClass):
         if score>max_score:
             max_score = score
             optimal_k = k
-        print('internal',k,score, max_score)
+        # print('internal',k,score, max_score)
         # print('internal',optimal_k)
 
     selector = SelectKBest(f_classif,k=optimal_k)
     selector.fit(X,Y)
     column  = selector.get_support(indices=True)
-    important_features = X.iloc[:,columns].columns
+    important_features = list(X.iloc[:,columns].columns)
+    # print(important_features)
+    important_features.append(label)
     X = dataset[important_features]
-
     return X
 
-def anova_classifier(dataset,label,modelClass):
+def anova_classifier(dataset,label,modelClass=RandomForestClassifier):
     features = get_features(dataset, label)
     n = len(features)
     # List containing the different values to consider as K
@@ -59,7 +60,7 @@ def anova_classifier(dataset,label,modelClass):
         model.fit(X_train,Y_train)
 
         Y_pred = model.predict(X_test)
-        score=metrics.f1_score(X_test,Y_pred)
+        score=metrics.f1_score(Y_test,Y_pred)
 
         if score>max_score:
             max_score = score
@@ -68,7 +69,7 @@ def anova_classifier(dataset,label,modelClass):
     selector = SelectKBest(f_classif,k=optimal_k)
     selector.fit(X,Y)
     column  = selector.get_support(indices=True)
-    important_features = X.iloc[:,columns].columns
+    important_features = list(X.iloc[:,columns].columns)
+    important_features.append(label)
     X = dataset[important_features]
-
     return X

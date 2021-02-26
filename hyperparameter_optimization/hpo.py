@@ -1,50 +1,45 @@
-from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
-from sklearn.metrics import r2_score, f1_score
-from skopt import BayesSearchCV
-from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
-from utils import get_features
-from constants import hyperparameters, hyperopt_hyperparameters
+from sklearn.model_selection import train_test_split
+from utils import get_model, get_features
+from hyperparameter_optimization.hpo_methods import *
+from hyperparameter_optimization.hpo import *
 
-def grid_search(model, X_train, Y_train):
-    grid_search_model = GridSearchCV(model(), hyperparameters[model])
-    grid_search_model.fit(X_train, Y_train)
+def get_trained_model(dataset, label, model_name, method_name, task, max_evals=100, test_size=0.3, random_state=1):
 
-    optimized_model = model(**grid_search_model.best_params_)
-    optimized_model.fit(X_train, Y_train)
-    return optimized_model
+    features = get_features(dataset, label)
+    X, Y = dataset[features], dataset[label]
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state = random_state)
+    model = get_model(model_name)
 
-def random_search(model, X_train, Y_train):
-    random_search_model = RandomizedSearchCV(model(), hyperparameters[model])
-    random_search_model.fit(X_train, Y_train)
+    if method_name == 'grid_search':
+        trained_model = grid_search(model, X_train, Y_train)
+    elif method_name == 'random_search':
+        trained_model = random_search(model, X_train, Y_train)
+    elif method_name == 'bayesian_gp':
+        trained_model = bayesian_gp(model, X_train, Y_train)
+    elif method_name == 'bayesian_tpe':
+        trained_model = bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=max_evals)
+    else:
+        print('No hpo method named {}'.format(method_name))
+    return trained_model
 
-    optimized_model = model(**random_search_model.best_params_)
-    optimized_model.fit(X_train, Y_train)
-    return optimized_model
-
-def bayesian_gp(model, X_train, Y_train):
-    bayesian_gp_model = BayesSearchCV(model(), hyperparameters[model])
-    bayesian_gp_model.fit(X_train, Y_train)
-
-    optimized_model = model(**bayesian_gp_model.best_params_)
-    optimized_model.fit(X_train, Y_train)
-    return optimized_model 
+def generate_stats(dataset, label, model_names, method_names, task, max_evals=100, test_size=0.3, random_state = 1):
     
-def bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=100):
-    def objective_func(space):
-        hyperopt_model = model(**space)
-        hyperopt_model.fit(X_train, Y_train)
-        Y_pred = hyperopt_model.predict(X_test)
-
-        loss = -r2_score(Y_test, Y_pred) if task == 'prediction' else -f1_score(Y_test, Y_pred)
-        return {'loss': loss, 'status': STATUS_OK}
-    
-    best_hyperparameters = fmin(fn=objective_func, space=hyperopt_hyperparameters[model], algo=tpe.suggest, trials=Trials(), max_evals=max_evals)
-    
-    best_hyperparameters_values = {}
-    for hyperparameter, index in best_hyperparameters.items():
-        best_hyperparameters_values[hyperparameter] = hyperparameters[model][hyperparameter][index]
-    
-    optimized_model = model(**best_hyperparameters_values)
-    optimized_model.fit(X_train, Y_train)
-
-    return optimized_model
+    features = get_features(dataset, label)
+    X, Y = dataset[features], dataset[label]
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state = random_state)
+    function_map =  {
+        'grid': grid_search,
+        'random': random_search,
+        'bayesian-gp': bayesian_gp,
+        'bayesian-tpe': bayesian_tpe
+    }
+    stats = []
+    for model_name in model_names:
+        for method in method_names:
+            # Do something
+            model = get_trained_model(dataset, label, model_name, method, task, max_evals, test_size, random_state)
+            score = model.score(X_test, Y_test)
+            # TODO: add all metrics for classfication as well
+            stats.append((model_name, method, score))
+    return stats
+    # return sorted(stats, key=lambda stat : stat[2], reverse=True) # sort on basis of score/accuracy

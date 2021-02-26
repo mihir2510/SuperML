@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, ExtraTree
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, GradientBoostingClassifier, ExtraTreesClassifier
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from hyperopt import hp
-
+from feature_engineering import *
 hyperparameters = {
     LinearRegression: {
         'fit_intercept': [True, False],
@@ -86,8 +86,7 @@ hyperparameters = {
 }
 
 
-models = [LinearRegression, Ridge, Lasso, LogisticRegression, RandomForestRegressor, AdaBoostRegressor, ExtraTreesRegressor, BaggingRegressor, GradientBoostingRegressor,  RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, GradientBoostingClassifier, ExtraTreesClassifier, DecisionTreeClassifier, DecisionTreeRegressor
-]
+models = [LinearRegression, Ridge, Lasso, DecisionTreeRegressor, RandomForestRegressor, AdaBoostRegressor, ExtraTreesRegressor, BaggingRegressor, GradientBoostingRegressor, LogisticRegression, RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, GradientBoostingClassifier, ExtraTreesClassifier, DecisionTreeClassifier]
 
 hyperopt_hyperparameters = {}
 
