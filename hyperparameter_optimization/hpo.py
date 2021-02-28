@@ -3,14 +3,16 @@ from utils import get_model, get_features
 from hyperparameter_optimization.hpo_methods import *
 from hyperparameter_optimization.hpo import *
 
-def get_trained_model(dataset, label, model_name, method_name, task, max_evals=100, test_size=0.3, random_state=1):
+def get_trained_model(dataset, label, model_name, task, method_name='standard', max_evals=100, test_size=0.3, random_state=1):
 
     features = get_features(dataset, label)
     X, Y = dataset[features], dataset[label]
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state = random_state)
     model = get_model(model_name)
-
-    if method_name == 'grid_search':
+    if method_name=='standard':
+        model=model()
+        trained_model = model.fit(X_train,Y_train)
+    elif method_name == 'grid_search':
         trained_model = grid_search(model, X_train, Y_train)
     elif method_name == 'random_search':
         trained_model = random_search(model, X_train, Y_train)
@@ -22,6 +24,7 @@ def get_trained_model(dataset, label, model_name, method_name, task, max_evals=1
         print('No hpo method named {}'.format(method_name))
     return trained_model
 
+'''
 def generate_stats(dataset, label, model_names, method_names, task, max_evals=100, test_size=0.3, random_state = 1):
     
     features = get_features(dataset, label)
@@ -43,3 +46,4 @@ def generate_stats(dataset, label, model_names, method_names, task, max_evals=10
             stats.append((model_name, method, score))
     return stats
     # return sorted(stats, key=lambda stat : stat[2], reverse=True) # sort on basis of score/accuracy
+'''

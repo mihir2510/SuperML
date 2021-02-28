@@ -15,3 +15,4 @@ map_model = {model.__name__: model for model in models}
 
 def get_model(name):
     return map_model.get(name)
+

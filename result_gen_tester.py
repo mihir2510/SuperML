@@ -1,4 +1,4 @@
-from AutoML.result_generator import automate
+from AutoML.result_generator import *
 from utils import map_model
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.linear_model import LinearRegression
@@ -25,10 +25,10 @@ label = 'Target'
 # base_model.fit(X_train, Y_train)
 # print('Accuracy for base model:',base_model.score(dataset[get_features(dataset,label)], dataset[label]))
 
-stats = automate(dataset, label, 'prediction', models=models, modelClass=RandomForestRegressor, hpo_techs=['grid_search','random_search', 'bayesian_tpe'])
+stats = generate_results(dataset, label, 'prediction', models=models, modelClass=RandomForestRegressor, hpo_methods=['standard','grid_search','random_search', 'bayesian_tpe'],sortby='r2')#])
 
 """with open('stats2.txt','w') as f:
-    f.write(str(stats))"""
+f.write(str(stats))"""
 
 print(stats)
 
