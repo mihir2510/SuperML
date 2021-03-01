@@ -20,11 +20,12 @@ techniques_dict = {
     mod.__name__ : mod for mod in [anova_classifier, anova_regressor, correlation, pca, select_from_model, grid_search, random_search, bayesian_tpe, bayesian_gp]
 }
 
-def generate_results(dataset,label,task,feature_engineering_methods=default_feature_engineering_methods, hpo_methods=default_hyperparamter_methods, models=models ,modelClass=None, sortby=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1 ):
+def auto_train(dataset,label,task,feature_engineering_methods=default_feature_engineering_methods, hpo_methods=default_hyperparamter_methods, models=models ,modelClass=None, sortby=None, download_model = None,excel_file=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1):
     # dataset = preprocess_data(dataset,label)
     stats = []
     dataset = remove_null(dataset,label)
     dataset = label_encode(dataset,label)
+    correlation_matrix(dataset,label)
     original_dataset = dataset.copy()
     for feature_engineering_method in feature_engineering_methods:
         if feature_engineering_method == 'anova':
@@ -54,13 +55,20 @@ def generate_results(dataset,label,task,feature_engineering_methods=default_feat
                 column_names = ['Estimator', 'Feature Engineering Method', 'Hyperparameter Optimisation Method']
                 column_names.extend(list(model_metrics.keys()))
                 model_metrics = list(map(lambda value : round(value, 4), model_metrics.values()))
-                stats.append([model_name,feature_engineering_method,hpo_method]+list(model_metrics))
-                if sortby:
-                    index = column_names.index(sortby)
-                    stats.sort(key= lambda x: x[index],reverse=True)
-                pd_stats = pd.DataFrame(stats)
-                pd_stats.columns = column_names  
-
+                stats.append([model,model_name,feature_engineering_method,hpo_method]+list(model_metrics))
                 dataset = original_dataset.copy()
-    return pd_stats
+
+    if sortby:
+        index = column_names.index(sortby)
+        stats.sort(key= lambda x: x[index],reverse=True)
+    if download_model:
+        pickle_model(stats[0][0],download_model)       
+    pd_stats = pd.DataFrame(stats)
+    pd_stats.drop(pd_stats.columns[0], axis=1,inplace=True)
+    pd_stats.columns = column_names
+    
+    if excel_file:
+        get_csv(pd_stats,excel_file)
+
+    return pd_stats,stats[0][0]
 

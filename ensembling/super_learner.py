@@ -4,18 +4,25 @@ from hyperparameter_optimization.hpo_methods import bayesian_tpe
 import numpy as np
 
 class SuperLearnerRegressor():
-    def __init__(self, model_names, meta_model_name, n_splits=5, optimize=True, max_evals=100):
-        self.models = [get_model(model) for model in model_names]
-        self.meta_model = get_model(meta_model_name)()
+    def __init__(self, base_layer_models=None, meta_model=None, n_splits=5, optimize=True, max_evals=100):
+        if base_layer_models == None:
+            #base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor']
+            base_layer_models = ['LinearRegression', 'Ridge', 'Lasso']
+
+        self.models = [get_model(model) for model in base_layer_models]
+        self.meta_model = None if meta_model == None else get_model(meta_model)()
         self.n_splits = n_splits
         self.trained_models = []
         self.optimize = optimize
         self.max_evals = max_evals
         
 
-    def add_models(self, model_names):
-        self.models.extend([get_model(model) for model in model_names])
+    def add_models(self, base_layer_models):
+        self.models.extend([get_model(model) for model in base_layer_models])
     
+    def set_meta_model(self, meta_model):
+        self.meta_model = meta_model
+
     def get_out_of_fold_predictions(self):
         meta_X = list()
         meta_Y = list()
@@ -30,7 +37,7 @@ class SuperLearnerRegressor():
             Y_predictions = list()
             for model_class in self.models:
                 model = model_class()
-                model.fit(X=X_train,y=Y_train)
+                model.fit(X_train,Y_train)
                 Y_pred = model.predict(X_val)
                 Y_pred = Y_pred.reshape(len(Y_pred), 1)
 
@@ -52,27 +59,28 @@ class SuperLearnerRegressor():
 
         return np.vstack(meta_X), np.asarray(meta_Y)
 
-    def fit_base_models(self):
+    def fit_base_models(self, X_train, Y_train):
         for model_class in self.models:
             if self.optimize:
-                model = bayesian_tpe(model_class, self.X_train, self.X_train, self.Y_train, self.Y_train, 'prediction', self.max_evals)
+                model = bayesian_tpe(model_class, X_train, X_train, Y_train, Y_train, 'prediction', self.max_evals)
             else:
                 model = model_class()
                 model.fit(self.X_train, self.Y_train)
             
             self.trained_models.append(model)
     
-    def fit_meta_model(self):
-        self.meta_model.fit(self.meta_X, self.meta_Y)
+    def fit_meta_model(self, meta_model):
+        meta_model.fit(self.meta_X, self.meta_Y)
+        return meta_model
 
     def fit(self, X, Y):
         self.X_train = X
         self.Y_train = Y
         self.meta_X, self.meta_Y = self.get_out_of_fold_predictions()
-        self.fit_base_models()
-        self.fit_meta_model()
+        self.fit_base_models(self.X_train, self.Y_train)
+        self.meta_model = self.fit_meta_model(self.meta_model)
 
-    def predict(self, X):
+    def predict_base_models(self, X):
         meta_X = list()
         for model in self.trained_models:
             Y = model.predict(X)
@@ -81,20 +89,38 @@ class SuperLearnerRegressor():
 
         meta_X = np.hstack(meta_X)
         meta_X = meta_X.mean(axis=1).reshape((-1,1))
-        Y_pred = self.meta_model.predict(meta_X)
+        return meta_X
+    
+    def predict_meta_model(self, meta_model, meta_X):
+        Y_pred = meta_model.predict(meta_X)
         return Y_pred
 
+    def predict(self, X):
+        meta_X = self.predict_base_models(X)
+        Y_pred = self.predict_meta_model(self.meta_model, meta_X)
+        return Y_pred
+
+
+
+
+
+
+
 class SuperLearnerClassifier():
-    def __init__(self, model_names, meta_model_name, n_splits=5, optimize=True, max_evals=100):
-        self.models = [get_model(model) for model in model_names]
-        self.meta_model = get_model(meta_model_name)()
+    def __init__(self, base_layer_models=None, meta_model=None, n_splits=5, optimize=True, max_evals=100):
+        if base_layer_models == None:
+            #base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier']
+            base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier']
+
+        self.models = [get_model(model) for model in base_layer_models]
+        self.meta_model = get_model(meta_model)()
         self.n_splits = n_splits
         self.trained_models = []
         self.optimize = optimize
         self.max_evals = max_evals
 
-    def add_models(self, model_names):
-        self.models.extend([get_model(model) for model in model_names])
+    def add_models(self, base_layer_models):
+        self.models.extend([get_model(model) for model in base_layer_models])
     
     def get_out_of_fold_predictions(self):
         meta_X = list()
@@ -110,7 +136,7 @@ class SuperLearnerClassifier():
             Y_predictions=list()
             for model_class in self.models:
                 model= model_class()
-                model.fit(X=X_train, y=Y_train)
+                model.fit(X_train, Y_train)
                 Y_pred = model.predict_proba(X_val)
                 fold_Y_pred.append(Y_pred)
 

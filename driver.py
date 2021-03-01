@@ -1,5 +1,5 @@
 from data_preprocessing.preprocessing import *
-from feature_engineering.pca import featureEngineering_PCA
+from feature_engineering.pca import *
 import pandas as pd
 from feature_engineering.correlation import correlation
 from feature_engineering.anova import anova_regressor
@@ -14,7 +14,7 @@ import warnings
 
 warnings.filterwarnings('ignore')
 from data_preprocessing.preprocessing import *
-from feature_engineering.pca import featureEngineering_PCA
+from feature_engineering.pca import *
 import pandas as pd
 from feature_engineering.correlation import correlation
 from feature_engineering.anova import anova_regressor
@@ -37,10 +37,12 @@ dataframe = label_encode(dataframe, label)
 
 dataframe = oversampling(dataframe, label)
 
+correlation_matrix(dataframe,label)
+
 # print(len(dataframe.columns))
 # print(dataframe.head())
 # print('label',label)
-
+'''
 modified_dataframe = select_from_model(dataframe, label, LogisticRegression)
 print(len(modified_dataframe.columns))
 print(modified_dataframe.head())
@@ -51,3 +53,4 @@ X_train, X_test, Y_train, Y_test = train_test_split(modified_dataframe[get_featu
 Y_pred = trained_model.predict(X_test)
 print('formula 1 score:', f1_score(Y_test, Y_pred))
 print('Model Trained')
+'''

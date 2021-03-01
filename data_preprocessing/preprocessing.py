@@ -4,12 +4,16 @@ from imblearn.under_sampling import RandomUnderSampler
 from utils import get_features
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 def preprocess_data(dataset,label, task='classification'):
     dataset = remove_null(dataset,label)
     dataset = label_encode(dataset,label) 
-    # if task == 'classification':
-    #     dataset = oversampling(dataset,label)
+    if task == 'classification':
+        dataset = oversampling(dataset,label)
+    #correlation_matrix(dataset,label)
     return dataset
     # return oversampling(label_encode(remove_null(dataset,label),label),label)
 
@@ -72,3 +76,13 @@ def dataset_split(dataset,label, test_size=0.3, random_state = 1):
     X, Y = dataset[features], dataset[label]
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state=random_state)
     return X_train, X_test, Y_train, Y_test
+
+
+def correlation_matrix(dataset,label):
+    features = get_features(dataset,label)
+    correlation = dataset[features].corr().abs()
+    f, ax = plt.subplots(figsize=(20,20))
+    sns.heatmap(correlation, cmap='coolwarm', annot=True, ax=ax)
+    plt.show()
+    
+

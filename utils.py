@@ -3,9 +3,19 @@ from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, ExtraTree
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, GradientBoostingClassifier, ExtraTreesClassifier
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from constants import models
+import pickle
 
 def get_features(dataset,label):
-    #extracting features from dataset
+    '''
+    Returns the list of strings containing the names of features in the data set
+
+            Parameters:
+                    dataset (dataframe) : contains data for model training
+                    label (string) : the column name which is the target of machine learning 
+
+            Returns:
+                    features (string)
+    '''
     features = list(dataset.columns)
     features.remove(label)
     return features
@@ -14,5 +24,32 @@ def get_features(dataset,label):
 map_model = {model.__name__: model for model in models}
 
 def get_model(name):
+    '''
+    Returns the model corresponding to the model name
+
+            Parameters:
+                    name (string) : name of the model required
+
+            Returns:
+                    model (model class reference) 
+    '''
     return map_model.get(name)
+
+def pickle_model(model,file_name='pickled_model'):
+    '''
+    Saves the model in a pickle format for later use
+
+            Parameters:
+                    model (model object) 
+
+
+           
+    '''
+    pickle.dump(model, open(file_name+'.sav', 'wb'))
+
+def get_csv(pd_stats,filename='excel_file'):
+    pd_stats.to_excel(filename+'.xlsx')
+    print('Stats generated!')
+
+
 

@@ -25,7 +25,7 @@ label = 'Target'
 # base_model.fit(X_train, Y_train)
 # print('Accuracy for base model:',base_model.score(dataset[get_features(dataset,label)], dataset[label]))
 
-stats = generate_results(dataset, label, 'prediction', models=models, modelClass=RandomForestRegressor, hpo_methods=['standard','grid_search','random_search', 'bayesian_tpe'],sortby='r2')#])
+stats,model = generate_results(dataset, label, 'prediction', models=models, modelClass=RandomForestRegressor, hpo_methods=['standard'],sortby='r2',download_model='tester',excel_file='excel_file')#,'grid_search','random_search', 'bayesian_tpe'],sortby='r2')#])
 
 """with open('stats2.txt','w') as f:
 f.write(str(stats))"""
