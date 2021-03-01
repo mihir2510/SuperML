@@ -1,4 +1,4 @@
-from AutoML.result_generator import *
+from AutoML.auto_trainer import *
 from utils import map_model
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.linear_model import LinearRegression

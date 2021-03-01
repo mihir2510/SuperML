@@ -1,5 +1,6 @@
 from utils import get_model
 from sklearn.model_selection import train_test_split, KFold, StratifiedKFold, cross_val_score, cross_validate
+from data_preprocessing.preprocessing import dataset_split
 from hyperparameter_optimization.hpo_methods import bayesian_tpe
 import numpy as np
 
@@ -62,10 +63,11 @@ class SuperLearnerRegressor():
     def fit_base_models(self, X_train, Y_train):
         for model_class in self.models:
             if self.optimize:
-                model = bayesian_tpe(model_class, X_train, X_train, Y_train, Y_train, 'prediction', self.max_evals)
+                X_tr, X_te, Y_tr, Y_te = train_test_split(X_train, Y_train, random_state=1, test_size=0.3)
+                model = bayesian_tpe(model_class, X_tr, X_te, Y_tr, Y_te, 'prediction', self.max_evals)
             else:
                 model = model_class()
-                model.fit(self.X_train, self.Y_train)
+                model.fit(X_train, Y_train)
             
             self.trained_models.append(model)
     
@@ -102,9 +104,7 @@ class SuperLearnerRegressor():
 
 
 
-
-
-
+#------------------------------------------------------------------------------------------------------------------
 
 class SuperLearnerClassifier():
     def __init__(self, base_layer_models=None, meta_model=None, n_splits=5, optimize=True, max_evals=100):
@@ -113,7 +113,7 @@ class SuperLearnerClassifier():
             base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier']
 
         self.models = [get_model(model) for model in base_layer_models]
-        self.meta_model = get_model(meta_model)()
+        self.meta_model = None if meta_model == None else get_model(meta_model)()
         self.n_splits = n_splits
         self.trained_models = []
         self.optimize = optimize
@@ -122,6 +122,9 @@ class SuperLearnerClassifier():
     def add_models(self, base_layer_models):
         self.models.extend([get_model(model) for model in base_layer_models])
     
+    def set_meta_model(self, meta_model):
+        self.meta_model = meta_model
+
     def get_out_of_fold_predictions(self):
         meta_X = list()
         meta_Y = list()
@@ -144,35 +147,44 @@ class SuperLearnerClassifier():
             
         return np.vstack(meta_X), np.asarray(meta_Y)
     
-    def fit_base_models(self):
-        X_train, X_test, Y_train, Y_test = train_test_split(self.X_train, self.Y_train, test_size=0.3, random_state=42)
+    def fit_base_models(self, X_train, Y_train):
+        X_tr, X_te, Y_tr, Y_te = train_test_split(X_train, Y_train, test_size=0.3, random_state=1)
         for model_class in self.models:
             if self.optimize:
-                model = bayesian_tpe(model_class, X_train, X_test, Y_train, Y_test, 'classification', self.max_evals)
+                model = bayesian_tpe(model_class, X_tr, X_te, Y_tr, Y_te, 'classification', self.max_evals)
             else:
                 model = model_class()
-                model.fit(self.X_train, self.Y_train)
+                model.fit(X_train, Y_train)
         
             self.trained_models.append(model)
     
-    def fit_meta_model(self):
-        self.meta_model.fit(self.meta_X, self.meta_Y)
+    def fit_meta_model(self, meta_model):
+        meta_model.fit(self.meta_X, self.meta_Y)
+        return meta_model
 
     def fit(self, X, Y):
         self.X_train = X
         self.Y_train = Y
         self.meta_X, self.meta_Y = self.get_out_of_fold_predictions()
-        self.fit_base_models()
-        self.fit_meta_model()
+        self.fit_base_models(self.X_train, self.Y_train)
+        self.fit_meta_model(self.meta_model)
 
-    def predict(self, X):
+    def predict_base_models(self, X):
         meta_X = list()
         for model in self.trained_models:
             Y = model.predict_proba(X)
             meta_X.append(Y)
 
         meta_X = np.hstack(meta_X)
-        Y_pred = self.meta_model.predict(meta_X)
+        return meta_X
+
+    def predict_meta_model(self, meta_model, meta_X):
+        Y_pred = meta_model.predict(meta_X)
+        return Y_pred
+
+    def predict(self, X):
+        meta_X = self.predict_base_models(X)
+        Y_pred = self.predict_meta_model(self.meta_model, meta_X)
         return Y_pred
 
 

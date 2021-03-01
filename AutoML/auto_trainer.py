@@ -56,6 +56,7 @@ def auto_train(dataset,label,task,feature_engineering_methods=default_feature_en
                 column_names.extend(list(model_metrics.keys()))
                 model_metrics = list(map(lambda value : round(value, 4), model_metrics.values()))
                 stats.append([model,model_name,feature_engineering_method,hpo_method]+list(model_metrics))
+
                 dataset = original_dataset.copy()
 
     if sortby:
@@ -68,7 +69,7 @@ def auto_train(dataset,label,task,feature_engineering_methods=default_feature_en
     pd_stats.columns = column_names
     
     if excel_file:
-        get_csv(pd_stats,excel_file)
+        pd.get_csv(pd_stats,excel_file)
 
     return pd_stats,stats[0][0]
 

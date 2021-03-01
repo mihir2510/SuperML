@@ -4,6 +4,7 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, Bagging
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from constants import models
 import pickle
+import pandas as pd
 
 def get_features(dataset,label):
     '''
@@ -50,6 +51,9 @@ def pickle_model(model,file_name='pickled_model'):
 def get_csv(pd_stats,filename='excel_file'):
     pd_stats.to_excel(filename+'.xlsx')
     print('Stats generated!')
+
+def download_dataset(dataset_path):
+    return pd.read_csv(dataset_path)
 
 
 
