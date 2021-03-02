@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, ExtraTree
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, GradientBoostingClassifier, ExtraTreesClassifier
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from hyperopt import hp
-from feature_engineering import *
+
 hyperparameters = {
     LinearRegression: {
         'fit_intercept': [True, False],
@@ -50,6 +50,18 @@ hyperparameters = {
         'ccp_alpha': [0, 0.01, 0.1, 1]
     },
 
+    GradientBoostingRegressor: {
+        'n_estimators' : [20,40,60,80,100],
+        'criterion' : ['friedman_mse', 'mse', 'mae'],
+        'max_features' : ['auto', 'sqrt', 'log2'],
+        'ccp_alpha': [0, 0.01, 0.1, 1]
+    },
+
+    AdaBoostRegressor: {
+        'base_estimator' : [RandomForestRegressor,DecisionTreeRegressor],
+        'n_estimators' : [25,50,75,100]
+    },
+
     LogisticRegression: {
         'C': [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30],
         'fit_intercept': [True, False],
@@ -82,11 +94,22 @@ hyperparameters = {
         'bootstrap': [True, False],
         'class_weight': ['balanced', 'balanced_subsample', None],
         'ccp_alpha': [0, 0.01, 0.1, 1]
+    },
+    GradientBoostingClassifier: {
+        'n_estimators' : [20, 40, 60, 80, 100],
+        'criterion' : ['friedman_mse', 'mse', 'mae'],
+        'max_features' : ['auto', 'sqrt', 'log2'],
+        'ccp_alpha': [0, 0.01, 0.1, 1]
+    },
+
+    AdaBoostClassifier: {
+        'base_estimator' : [RandomForestClassifier,DecisionTreeClassifier],
+        'n_estimators' : [25,50,75,100]
     }
+
 }
 
 
-models = [LinearRegression, Ridge, Lasso, DecisionTreeRegressor, RandomForestRegressor, AdaBoostRegressor, ExtraTreesRegressor, BaggingRegressor, GradientBoostingRegressor, LogisticRegression, RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, GradientBoostingClassifier, ExtraTreesClassifier, DecisionTreeClassifier]
 
 hyperopt_hyperparameters = {}
 

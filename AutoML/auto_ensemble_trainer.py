@@ -1,4 +1,4 @@
-from utils import pickle_model
+from utils import *
 from data_preprocessing.preprocessing import *
 from feature_engineering import pca, anova
 from ensembling.super_learner import *
@@ -118,6 +118,6 @@ def auto_ensemble_trainer(dataset, label, task, base_layer_models=None, meta_lay
     pd_stats.columns = column_names
     
     if excel_file:
-        pd.get_csv(pd_stats,excel_file)
+        get_csv(pd_stats,excel_file)
 
     return pd_stats,stats_list[0][0]

@@ -4,7 +4,6 @@ import pandas as pd
 
 
 def get_model_metrics(model,label_data,task, X_test, Y_test):
-
     '''
     Returns the dictionary cotaining metrics for the given data.
 

@@ -7,11 +7,18 @@ import numpy as np
 class SuperLearnerRegressor():
     def __init__(self, base_layer_models=None, meta_model=None, n_splits=5, optimize=True, max_evals=100):
         if base_layer_models == None:
-            #base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor']
+            #base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'ExtraTreesRegressor', 'AdaBoostRegressor','GradientBoostingRegressor']
             base_layer_models = ['LinearRegression', 'Ridge', 'Lasso']
 
         self.models = [get_model(model) for model in base_layer_models]
-        self.meta_model = None if meta_model == None else get_model(meta_model)()
+        
+        if meta_model == None:
+            self.meta_model = None
+        elif meta_model == 'AdaBoostRegressor':
+            self.model = get_model(model)(estimator=get_model('RandomForestRegressor'))
+        else:
+            self.model = get_model(meta_model)()
+        
         self.n_splits = n_splits
         self.trained_models = []
         self.optimize = optimize
@@ -109,11 +116,18 @@ class SuperLearnerRegressor():
 class SuperLearnerClassifier():
     def __init__(self, base_layer_models=None, meta_model=None, n_splits=5, optimize=True, max_evals=100):
         if base_layer_models == None:
-            #base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier']
+            #base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'GradientBoostingClassifier','ExtraTreesClassifier','AdaBoostClassifier']
             base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier']
 
         self.models = [get_model(model) for model in base_layer_models]
-        self.meta_model = None if meta_model == None else get_model(meta_model)()
+        
+        if meta_model == None:
+            self.meta_model = None
+        elif meta_model == 'AdaBoostClassifier':
+            self.model = get_model(model)(estimator=get_model('RandomForestClassifier'))
+        else:
+            self.model = get_model(meta_model)()
+        
         self.n_splits = n_splits
         self.trained_models = []
         self.optimize = optimize

@@ -9,6 +9,7 @@ import seaborn as sns
 
 
 def preprocess_data(dataset,label, task='classification'):
+    """timepass"""
     dataset = remove_null(dataset,label)
     dataset = label_encode(dataset,label) 
     if task == 'classification':
@@ -18,7 +19,16 @@ def preprocess_data(dataset,label, task='classification'):
     # return oversampling(label_encode(remove_null(dataset,label),label),label)
 
 def remove_null(dataset,label):
+    '''
+    Removes the null rows and features.
 
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+
+            Returns:
+                    dataset(dataframe) : processed data to be used for training model
+    '''
     #get features
     features = get_features(dataset,label)
     
@@ -37,6 +47,16 @@ def remove_null(dataset,label):
     return dataset
     
 def label_encode(dataset,label):
+    '''
+    Label encode the data
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+
+            Returns:
+                    dataset(dataframe) : processed data to be used for training model
+    '''
     #get features
     features = get_features(dataset,label)
     
@@ -55,7 +75,16 @@ def label_encode(dataset,label):
     return dataset
 
 def oversampling(dataset, label):
-    #get features
+    '''
+    Oversamples the data to get rid of skewness from the dataset.
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe 
+
+            Returns:
+                    dataset(dataframe) : processed data to be used for training model
+    '''
     features = get_features(dataset,label)
     new_dataset = None
     if True:
@@ -72,6 +101,17 @@ def oversampling(dataset, label):
     return new_dataset
 
 def dataset_split(dataset,label, test_size=0.3, random_state = 1):
+    '''
+    Splits the dataset in train and test data 
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+                    test_size (float) : 
+
+            Returns:
+                    dataset(dataframe) : processed data to be used for training model
+    '''
     features = get_features(dataset, label)
     X, Y = dataset[features], dataset[label]
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state=random_state)
@@ -79,6 +119,17 @@ def dataset_split(dataset,label, test_size=0.3, random_state = 1):
 
 
 def correlation_matrix(dataset,label):
+    '''
+    Splits the dataset in train and test data 
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+                    test_size (float) : 
+
+            Returns:
+                    dataset(dataframe) : processed data to be used for training model
+    '''
     features = get_features(dataset,label)
     correlation = dataset[features].corr().abs()
     f, ax = plt.subplots(figsize=(20,20))

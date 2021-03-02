@@ -38,7 +38,7 @@ def auto_train(dataset,label,task,feature_engineering_methods=default_feature_en
                 if task != 'prediction' and feature_engineering_method != 'pca':
                     dataset = oversampling(dataset,label)
                 if feature_engineering_method.startswith('anova') and modelClass:
-                    dataset = techniques_dict[feature_engineering_method](dataset, label, map_model[model_name])
+                    dataset = techniques_dict[feature_engineering_method](dataset, label, modelClass)
                 elif feature_engineering_method == 'correlation':
                     dataset = techniques_dict[feature_engineering_method](dataset, label, threshold)
                 elif feature_engineering_method == 'select_from_model':
@@ -51,7 +51,7 @@ def auto_train(dataset,label,task,feature_engineering_methods=default_feature_en
                 features = get_features(dataset, label)
                 X, Y = dataset[features], dataset[label]
                 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size,random_state=random_state)
-                model_metrics = get_model_metrics(model,task,X_test, Y_test)
+                model_metrics = get_model_metrics(model,label,task,X_test, Y_test)
                 column_names = ['Estimator', 'Feature Engineering Method', 'Hyperparameter Optimisation Method']
                 column_names.extend(list(model_metrics.keys()))
                 model_metrics = list(map(lambda value : round(value, 4), model_metrics.values()))
@@ -69,7 +69,7 @@ def auto_train(dataset,label,task,feature_engineering_methods=default_feature_en
     pd_stats.columns = column_names
     
     if excel_file:
-        pd.get_csv(pd_stats,excel_file)
+        get_csv(pd_stats,excel_file)
 
     return pd_stats,stats[0][0]
 

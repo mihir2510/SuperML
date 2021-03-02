@@ -3,7 +3,7 @@ from sklearn.metrics import r2_score, f1_score
 from skopt import BayesSearchCV
 from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
 from utils import get_features
-from constants import hyperparameters, hyperopt_hyperparameters
+from constants import *
 
 def grid_search(model, X_train, Y_train):
     grid_search_model = GridSearchCV(model(), hyperparameters[model])

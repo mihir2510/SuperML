@@ -4,7 +4,19 @@ from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from math import ceil, sqrt, log2
 
-def anova_regressor(dataset,label,modelClass=RandomForestRegressor):
+def anova_regressor(dataset,label,modelClass='RandomForestRegressor'):
+    '''
+    Anova (analysis of variance) os used to select features 
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+                    modelClass (model class reference)
+
+            Returns:
+                    dataset(dataframe) : processed data to be used for training model
+    '''
+    modelClass=get_model(modelClass)
     features = get_features(dataset, label)
     n = len(features)
     # List containing the different values to consider as K
@@ -40,7 +52,19 @@ def anova_regressor(dataset,label,modelClass=RandomForestRegressor):
     X = dataset[important_features]
     return X
 
-def anova_classifier(dataset,label,modelClass=RandomForestClassifier):
+def anova_classifier(dataset,label,modelClass='RandomForestClassifier'):
+    '''
+    Anova (analysis of variance) os used to select features 
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+                    modelClass (model class reference)
+
+            Returns:
+                    dataset(dataframe) : processed data to be used for training model
+    '''
+    modelClass = get_model(modelClass)
     features = get_features(dataset, label)
     n = len(features)
     # List containing the different values to consider as K
