@@ -4,7 +4,22 @@ from hyperparameter_optimization.hpo_methods import *
 from hyperparameter_optimization.hpo import *
 
 def get_trained_model(dataset, label, model_name, task, method_name='standard', max_evals=100, test_size=0.3, random_state=1):
+    '''
+    Train the model with given data and hpo method . Returns the trained model
 
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+                    task (string) : type of task 
+                    model_name(string) : name of the model on which data is to be trained
+                    method_name(string) : Name of the hyper parameter method to be used while training
+                    max_evals(int) : Number of evaluators
+                    test_size(float) : Fraction of the data to be used for testing
+                    random_state(int) : Random state to be used
+
+            Returns:
+                    model (model object) : the trained model on which hpo is performed
+    '''
     features = get_features(dataset, label)
     X, Y = dataset[features], dataset[label]
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state = random_state)

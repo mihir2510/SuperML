@@ -9,7 +9,17 @@ import seaborn as sns
 
 
 def preprocess_data(dataset,label, task='classification'):
-    """timepass"""
+    '''
+    Implements all the preprocessing steps: remove null, label encode, oversampling, data split, correlation matrix
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+                    task (string) : type of task default is classification
+
+            Returns:
+                    dataset(dataframe) : processed data to be used for training model
+    '''
     dataset = remove_null(dataset,label)
     dataset = label_encode(dataset,label) 
     if task == 'classification':

@@ -56,5 +56,12 @@ def get_csv(pd_stats,filename='excel_file'):
 def download_dataset(dataset_path):
     return pd.read_csv(dataset_path)
 
+def check(func, *args, **kw):
+    try:
+        func(*args, **kw)
+        return True
+    except Exception:
+        return False
+
 
 

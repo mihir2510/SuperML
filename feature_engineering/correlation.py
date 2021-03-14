@@ -2,6 +2,17 @@ from utils import *
 import numpy as np
 
 def correlation(dataset,label,threshold=0.90):
+    '''
+    Uses correlation between features to drop highly correlated feature and return the processed data
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+                    threshold(float) : threshold for deciding the features to be dropped
+
+            Returns:
+                    dataset(dataframe) : processed data to be used for training model
+    '''
     #print(threshold)
     features=get_features(dataset,label)
 

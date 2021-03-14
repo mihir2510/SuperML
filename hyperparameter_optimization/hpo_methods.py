@@ -6,6 +6,17 @@ from utils import get_features
 from constants import *
 
 def grid_search(model, X_train, Y_train):
+    '''
+    Traditonal grid search method. It evaluates all the possible combinations
+
+            Parameters:
+                    model(class of model) : class of the model on which the hpo is to be performed
+                    X_train(dataframe): the dataframe containing data(features) for training
+                    Y_train (pd_series) : labels for the training
+
+            Returns:
+                    model (model object) : the trained model on which hpo is performed
+    '''
     grid_search_model = GridSearchCV(model(), hyperparameters[model])
     grid_search_model.fit(X_train, Y_train)
     optimized_model = model(**grid_search_model.best_params_)
@@ -13,6 +24,17 @@ def grid_search(model, X_train, Y_train):
     return optimized_model
 
 def random_search(model, X_train, Y_train):
+    '''
+    Traditonal grid search method. It evaluates all the possible combinations
+
+            Parameters:
+                    model(class of model) : class of the model on which the hpo is to be performed
+                    X_train(dataframe): the dataframe containing data(features) for training
+                    Y_train (pd_series) : labels for the training
+
+            Returns:
+                    model (model object) : the trained model on which hpo is performed
+    '''
     random_search_model = RandomizedSearchCV(model(), hyperparameters[model])
     random_search_model.fit(X_train, Y_train)
 
@@ -21,6 +43,17 @@ def random_search(model, X_train, Y_train):
     return optimized_model
 
 def bayesian_gp(model, X_train, Y_train):
+    '''
+    Traditonal grid search method. It evaluates all the possible combinations
+
+            Parameters:
+                    model(class of model) : class of the model on which the hpo is to be performed
+                    X_train(dataframe): the dataframe containing data(features) for training
+                    Y_train (pd_series) : labels for the training
+
+            Returns:
+                    model (model object) : the trained model on which hpo is performed
+    '''
     bayesian_gp_model = BayesSearchCV(model(), hyperparameters[model])
     bayesian_gp_model.fit(X_train, Y_train)
 
@@ -29,7 +62,29 @@ def bayesian_gp(model, X_train, Y_train):
     return optimized_model 
     
 def bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=100):
+    '''
+    Traditonal grid search method. It evaluates all the possible combinations
+
+            Parameters:
+                    model(class of model) : class of the model on which the hpo is to be performed
+                    X_train(dataframe): the dataframe containing data(features) for training
+                    Y_train (pd_series) : labels for the training
+                    X_test(dataframe): the dataframe containing data(features) for for testing
+                    Y_test (pd_series) : labels for testing/evaluating the trained model
+
+            Returns:
+                    model (model object) : the trained model on which hpo is performed
+    '''
     def objective_func(space):
+        '''
+        function to optimize the search
+
+                Parameters:
+                        space(dictionary): hyperparameter grid
+
+                Returns:
+                        dictionary : loss and status
+        '''
         hyperopt_model = model(**space)
         hyperopt_model.fit(X_train, Y_train)
         Y_pred = hyperopt_model.predict(X_test)
