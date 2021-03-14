@@ -8,3 +8,5 @@ matplotlib==3.3.4
 Pillow==8.1.0
 openpyxl
 plotly
+pytest
+pytest-runner

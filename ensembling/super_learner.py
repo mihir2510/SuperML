@@ -6,6 +6,19 @@ import numpy as np
 
 class SuperLearnerRegressor():
     def __init__(self, base_layer_models=None, meta_model=None, n_splits=5, optimize=True, max_evals=100):
+        '''
+        Initializes the class variables
+
+                Parameters:
+                        base_layer_models (list) : list of models to be used at base layer in ensembling
+                        meta_model (model object) : model to be used in the meta layer
+                        n_splits(int) : number of splits to be made for cross validation
+                        optimize(boolean) : optimize the process 
+                        max_evals(int) : max number of evaluations to be done
+                        metric(string) : metric to select best model
+
+                
+        '''
         if base_layer_models == None:
             #base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'ExtraTreesRegressor', 'AdaBoostRegressor','GradientBoostingRegressor']
             base_layer_models = ['LinearRegression', 'Ridge', 'Lasso']
@@ -26,9 +39,25 @@ class SuperLearnerRegressor():
         
 
     def add_models(self, base_layer_models):
+        '''
+        Add the base layer model objects to model list
+
+                Parameters:
+                        base_layer_models (list) : list of models to be used at base layer in ensembling
+
+  
+        '''
         self.models.extend([get_model(model) for model in base_layer_models])
     
     def set_meta_model(self, meta_model):
+        '''
+        Set the meta model
+
+                Parameters:
+                        meta_model (model object) : model to be used at meta layer
+
+  
+        '''
         self.meta_model = meta_model
 
     def get_out_of_fold_predictions(self):

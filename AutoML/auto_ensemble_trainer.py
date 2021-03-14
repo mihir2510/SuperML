@@ -8,7 +8,27 @@ import sklearn
 import pandas as pd
 
 def auto_ensemble_trainer(dataset, label, task, base_layer_models=None, meta_layer_models=None, n_splits=5, optimize=True, max_evals=100, download_model = None, metric=None, sortby=False, excel_file=None):
-    
+    '''
+    Implements the whole automl pipeline. Consists of the stages: Datapreprocessing -> Feature Engineering -> HPO -> Ensembling.
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+                    task (string) : type of task 
+                    download_model(string) : name of the file to be used for saving model
+                    base_layer_models (list) : list of models to be used at base layer in ensembling
+                    meta_layer_models (list) : list of models to be used at meta layer in ensembling
+                    n_splits(int) : number of splits to be made for cross validation
+                    optimize(boolean) : optimize the process 
+                    max_evals(int) : max number of evaluations to be done
+                    download_model(boolean) : save the final trained ensemble
+                    metric(string) : metric to select best model
+                    sortby (string) : sort the result as per metric
+                    excel_file(strig) : name of the file to be used for saving stats
+
+            Returns:
+                    stats (dictionary): contains the metrics for given data
+    '''
     # Data Preprocessing
     prepocessed_dataset = preprocess_data(dataset, label, task)
 

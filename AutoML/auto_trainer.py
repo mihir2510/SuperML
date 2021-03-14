@@ -21,6 +21,28 @@ techniques_dict = {
 }
 
 def auto_train(dataset,label,task,feature_engineering_methods=default_feature_engineering_methods, hpo_methods=default_hyperparamter_methods, models=models ,modelClass=None, sortby=None, download_model = None,excel_file=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1):
+    '''
+    Implements the whole automl pipeline. Consists of the stages: Datapreprocessing -> Feature Engineering -> HPO -> Ensembling.
+
+            Parameters:
+                    dataset(dataframe) : data to be used for training model
+                    label (string): target column of the dataframe  
+                    task (string) : type of task 
+                    feature_engineering_methods(list): list of feature engineering methods to be implemented
+                    hpo_methods(list): list of hpo methods to be implemented
+                    models(list): list of models to be used for generating results
+                    modelClass (class of model) : model to be used as base for featureengineering technique
+                    sortby(string) : sort the result as per metric
+                    download_model(string) : name of the file to be used for saving model
+                    excel_file(string) : name of the file to be used for saving stats
+                    threshold(float) : to decide the useful features to be kept
+                    max_evals(int) : max number of evaluations to be done
+                    test_size(float) : fraction of data to be used for testing
+                    random_state(int) : random state to follow
+            Returns:
+                    stats (dictionary): contains the metrics for given data
+                    model (mode object): trained model
+    '''
     # dataset = preprocess_data(dataset,label)
     stats = []
     dataset = remove_null(dataset,label)
