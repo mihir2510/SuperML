@@ -1,4 +1,4 @@
-from utils import *
+from MyAutoMLLibrary.utils import *
 from sklearn.feature_selection import f_classif, SelectKBest
 from sklearn.model_selection import train_test_split
 from sklearn import metrics

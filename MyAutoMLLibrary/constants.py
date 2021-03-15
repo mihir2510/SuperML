@@ -58,7 +58,7 @@ hyperparameters = {
     },
 
     AdaBoostRegressor: {
-        'base_estimator' : [RandomForestRegressor,DecisionTreeRegressor],
+        'base_estimator' : [DecisionTreeRegressor()],
         'n_estimators' : [25,50,75,100]
     },
 
@@ -103,7 +103,7 @@ hyperparameters = {
     },
 
     AdaBoostClassifier: {
-        'base_estimator' : [RandomForestClassifier,DecisionTreeClassifier],
+        'base_estimator' : [DecisionTreeClassifier()],
         'n_estimators' : [25,50,75,100]
     }
 
@@ -117,4 +117,3 @@ for model in hyperparameters:
     hyperopt_hyperparameters[model] = {}
     for hyperparameter in hyperparameters[model]:
         hyperopt_hyperparameters[model][hyperparameter] = hp.choice(hyperparameter, hyperparameters[model][hyperparameter])
-

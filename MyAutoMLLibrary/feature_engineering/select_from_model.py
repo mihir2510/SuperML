@@ -1,4 +1,4 @@
-from utils import *
+from MyAutoMLLibrary.utils import *
 from sklearn.feature_selection import SelectFromModel
 import pandas as pd
 

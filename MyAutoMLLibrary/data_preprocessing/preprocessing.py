@@ -13,14 +13,14 @@ def preprocess_data(dataset,label, task='classification'):
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe  
+                    label (string): target column of the dataframe
                     task (string) : type of task default is classification
 
             Returns:
                     dataset(dataframe) : processed data to be used for training model
     '''
     dataset = remove_null(dataset,label)
-    dataset = label_encode(dataset,label) 
+    dataset = label_encode(dataset,label)
     if task == 'classification':
         dataset = oversampling(dataset,label)
     #correlation_matrix(dataset,label)
@@ -33,14 +33,14 @@ def remove_null(dataset,label):
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe  
+                    label (string): target column of the dataframe
 
             Returns:
                     dataset(dataframe) : processed data to be used for training model
     '''
     #get features
     features = get_features(dataset,label)
-    
+
     # Removing Columns with more than 50% null data
     for feature in features:
         if (dataset[feature].isnull().sum()/len(dataset) > 0.5):
@@ -54,32 +54,32 @@ def remove_null(dataset,label):
         dataset.drop(['Unnamed: 0'],axis=1,inplace=True)
 
     return dataset
-    
+
 def label_encode(dataset,label):
     '''
     Label encode the data
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe  
+                    label (string): target column of the dataframe
 
             Returns:
                     dataset(dataframe) : processed data to be used for training model
     '''
     #get features
     features = get_features(dataset,label)
-    
+
     #for features
     for feature in features:
         if dataset[feature].dtype == object:
-            
+
             encoder = LabelEncoder()
             encoder.fit(dataset[feature])
             dataset[feature] = encoder.transform(dataset[feature])
     #for label
     if dataset[label].dtype == object:
         dataset[label] = LabelEncoder().fit_transform(dataset[label])
-        
+
     if 'Unnamed: 0' in dataset.columns:
         dataset.drop(['Unnamed: 0'],axis=1,inplace=True)
     return dataset
@@ -90,7 +90,7 @@ def oversampling(dataset, label):
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe 
+                    label (string): target column of the dataframe
 
             Returns:
                     dataset(dataframe) : processed data to be used for training model
@@ -107,17 +107,17 @@ def oversampling(dataset, label):
         new_dataset = dataset
     if 'Unnamed: 0' in new_dataset.columns:
         new_dataset.drop(['Unnamed: 0'],axis=1,inplace=True)
-    
+
     return new_dataset
 
 def dataset_split(dataset,label, test_size=0.3, random_state = 1):
     '''
-    Splits the dataset in train and test data 
+    Splits the dataset in train and test data
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe  
-                    test_size (float) : 
+                    label (string): target column of the dataframe
+                    test_size (float) :
 
             Returns:
                     dataset(dataframe) : processed data to be used for training model
@@ -130,12 +130,12 @@ def dataset_split(dataset,label, test_size=0.3, random_state = 1):
 
 def correlation_matrix(dataset,label):
     '''
-    Splits the dataset in train and test data 
+    Splits the dataset in train and test data
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe  
-                    test_size (float) : 
+                    label (string): target column of the dataframe
+                    test_size (float) :
 
             Returns:
                     dataset(dataframe) : processed data to be used for training model
@@ -145,5 +145,3 @@ def correlation_matrix(dataset,label):
     f, ax = plt.subplots(figsize=(20,20))
     sns.heatmap(correlation, cmap='coolwarm', annot=True, ax=ax)
     plt.show()
-    
-

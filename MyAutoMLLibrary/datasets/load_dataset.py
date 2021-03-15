@@ -4,7 +4,7 @@ import pandas as pd
 label_map = {
     'boston': 'Target',
     'carprice': 'price',
-    'diabetes': 'label',
+    'diabetes': 'Outcome',
     # 'energy': '',
     'heart_disease': 'class',
     'salary': 'Salary',

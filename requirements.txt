@@ -10,5 +10,4 @@ openpyxl
 plotly
 pytest
 pytest-runner
-matplotlib
 seaborn

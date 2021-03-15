@@ -1,14 +1,14 @@
-from data_preprocessing.preprocessing import *
-from feature_engineering.select_from_model import select_from_model
-from feature_engineering.anova import anova_classifier, anova_regressor
-from feature_engineering.correlation import correlation
-from feature_engineering.pca import pca
+from MyAutoMLLibrary.data_preprocessing.preprocessing import *
+from MyAutoMLLibrary.feature_engineering.select_from_model import select_from_model
+from MyAutoMLLibrary.feature_engineering.anova import anova_classifier, anova_regressor
+from MyAutoMLLibrary.feature_engineering.correlation import correlation
+from MyAutoMLLibrary.feature_engineering.pca import pca
 from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, ExtraTreesRegressor, BaggingRegressor, GradientBoostingRegressor
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, GradientBoostingClassifier, ExtraTreesClassifier
-from hyperparameter_optimization.hpo_methods import *
-from hyperparameter_optimization.hpo import get_trained_model
-from utils import *
-from metrics.metrics import get_model_metrics
+from MyAutoMLLibrary.hyperparameter_optimization.hpo_methods import *
+from MyAutoMLLibrary.hyperparameter_optimization.hpo import get_trained_model
+from MyAutoMLLibrary.utils import *
+from MyAutoMLLibrary.metrics.metrics import get_model_metrics
 import pandas as pd
 
 default_feature_engineering_methods = ['all_features','anova', 'correlation', 'pca', 'select_from_model']

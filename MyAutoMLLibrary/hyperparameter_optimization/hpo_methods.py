@@ -2,8 +2,8 @@ from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSe
 from sklearn.metrics import r2_score, f1_score
 from skopt import BayesSearchCV
 from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
-from utils import get_features
-from constants import *
+from MyAutoMLLibrary.utils import get_features
+from MyAutoMLLibrary.constants import *
 
 def grid_search(model, X_train, Y_train):
     '''

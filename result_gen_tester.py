@@ -1,11 +1,11 @@
-from AutoML.auto_trainer import *
-from utils import map_model
+from MyAutoMLLibrary.AutoML.auto_trainer import *
+from MyAutoMLLibrary.utils import map_model
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 import pandas as pd
-from feature_engineering.anova import anova_regressor
+from MyAutoMLLibrary.feature_engineering.anova import anova_regressor
 import warnings
-from data_preprocessing.preprocessing import *
+from MyAutoMLLibrary.data_preprocessing.preprocessing import *
 
 warnings.filterwarnings('ignore')
 models = list(map_model.keys())
@@ -31,6 +31,3 @@ stats,model = auto_train(dataset, label, 'prediction', models=models, modelClass
 f.write(str(stats))"""
 
 print(stats)
-
-
-

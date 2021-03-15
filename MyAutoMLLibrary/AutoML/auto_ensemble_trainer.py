@@ -1,9 +1,9 @@
-from utils import *
-from data_preprocessing.preprocessing import *
-from feature_engineering import pca, anova
-from ensembling.super_learner import *
-from hyperparameter_optimization.hpo import get_trained_model
-from metrics.metrics import *
+from MyAutoMLLibrary.utils import *
+from MyAutoMLLibrary.data_preprocessing.preprocessing import *
+from MyAutoMLLibrary.feature_engineering import pca, anova
+from MyAutoMLLibrary.ensembling.super_learner import *
+from MyAutoMLLibrary.hyperparameter_optimization.hpo import get_trained_model
+from MyAutoMLLibrary.metrics.metrics import *
 import sklearn
 import pandas as pd
 

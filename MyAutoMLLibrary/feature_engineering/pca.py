@@ -1,5 +1,5 @@
 from sklearn.decomposition import PCA
-from utils import *
+from MyAutoMLLibrary.utils import *
 import pandas as pd
 
 

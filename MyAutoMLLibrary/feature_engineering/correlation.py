@@ -1,4 +1,4 @@
-from utils import *
+from MyAutoMLLibrary.utils import *
 import numpy as np
 
 def correlation(dataset,label,threshold=0.90):

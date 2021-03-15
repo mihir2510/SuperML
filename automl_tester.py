@@ -1,10 +1,10 @@
-from utils import get_features
-from data_preprocessing.preprocessing import *
-from feature_engineering.correlation import correlation
-from feature_engineering.anova import *
-from ensembling.super_learner import *
-from AutoML.automl import *
-from AutoML.auto_ensemble_trainer import *
+from MyAutoMLLibrary.utils import get_features
+from MyAutoMLLibrary.data_preprocessing.preprocessing import *
+from MyAutoMLLibrary.feature_engineering.correlation import correlation
+from MyAutoMLLibrary.feature_engineering.anova import *
+from MyAutoMLLibrary.ensembling.super_learner import *
+from MyAutoMLLibrary.AutoML import *
+from MyAutoMLLibrary.AutoML.auto_ensemble_trainer import *
 import warnings
 warnings.filterwarnings('ignore')
 

@@ -1,8 +1,8 @@
-from utils import pickle_model
-from data_preprocessing.preprocessing import *
-from feature_engineering import pca, anova
-from ensembling.super_learner import *
-from metrics.metrics import *
+from MyAutoMLLibrary.utils import pickle_model
+from MyAutoMLLibrary.data_preprocessing.preprocessing import *
+from MyAutoMLLibrary.feature_engineering import pca, anova
+from MyAutoMLLibrary.ensembling.super_learner import *
+from MyAutoMLLibrary.metrics.metrics import *
 import sklearn
 
 def automl(dataset, label, task, base_layer_models=None, meta_layer_model=None, n_splits=5, optimize=True, max_evals=100, download_model = None, metric=None):
