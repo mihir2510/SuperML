@@ -14,4 +14,4 @@ import pandas as pd
 
 myFile = pd.read_excel('../excel_file.xlsx', index_col=[0])
 stats_list = myFile
-plot_2d.bar_2d(stats_list)
+plot_2d.bar_2d(stats_list, 'rmse')

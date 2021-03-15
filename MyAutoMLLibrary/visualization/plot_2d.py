@@ -4,30 +4,32 @@ import pandas as pd
 
 
 
-def bar_2d(stats):
-
+def bar_2d(stats, Y, X='Estimator', groups=['Feature Engineering Method','Hyperparameter Optimisation Method']):
+    
     print(stats)
 
-    stats['concatenated'] = stats['Feature Engineering Method'] + ' ' + stats['Hyperparameter Optimisation Method']
-    xaxis_data=pd.unique(stats['Estimator'])
+    x = list(pd.unique(stats[X]))
+    # stats['concatenated'] = stats[group].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
+    stats['concatenated'] = stats[groups].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
+    #
     xy={}
     for index, row in stats.iterrows():
         key = 'concatenated'
         if row[key] not in xy:
             xy[row[key]] = []
-        xy[row[key]].append(row['r2'])
+        xy[row[key]].append(row[Y])
     print(xy)
 
     bar=[]
     for group in xy:
-        bar.append(go.Bar(name=group, x=xaxis_data, y=xy[group]))
+        bar.append(go.Bar(name=group, x=x, y=xy[group]))
 
     fig = go.Figure(data=bar)
     
     # Change the bar mode
     fig.update_layout(barmode='group')
 
-    fig.update_yaxes(range=(stats['r2'].min()-0.05, stats['r2'].max()+0.05))
+    fig.update_yaxes(range=(stats[Y].min()-0.05, stats[Y].max()+0.05))
     
     #fig.show()
 

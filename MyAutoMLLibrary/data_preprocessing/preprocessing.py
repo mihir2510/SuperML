@@ -1,12 +1,11 @@
 from sklearn.preprocessing import LabelEncoder
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.under_sampling import RandomUnderSampler
-from utils import get_features
+from MyAutoMLLibrary.utils import get_features
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 
 def preprocess_data(dataset,label, task='classification'):
     '''
@@ -73,6 +72,7 @@ def label_encode(dataset,label):
     #for features
     for feature in features:
         if dataset[feature].dtype == object:
+            
             encoder = LabelEncoder()
             encoder.fit(dataset[feature])
             dataset[feature] = encoder.transform(dataset[feature])
