@@ -6,7 +6,7 @@ label_map = {
     'carprice': 'price',
     'diabetes': 'label',
     # 'energy': '',
-    'hear_disease': 'class',
+    'heart_disease': 'class',
     'salary': 'Salary',
     'titanic': 'Survived',
     'weather': 'Apparent Temperature (C)'
