@@ -25,10 +25,13 @@ def anova_regressor(dataset,label,modelClass='RandomForestRegressor'):
     optimal_k = -1
     max_score = float('-inf')
     for k in numberOfFeatures:
-        selector = SelectKBest(f_classif,k=k)
-        selector.fit(X,Y)
-        columns=selector.get_support(indices=True)
-        important_features = X.iloc[:,columns].columns
+        try:
+            selector = SelectKBest(f_classif,k=k)
+            selector.fit(X,Y)
+            columns=selector.get_support(indices=True)
+            important_features = X.iloc[:,columns].columns
+        except:
+            raise Exception("Error in finding important features ")
 
         X_reduced=dataset[important_features]
         X_train,X_test,Y_train,Y_test = train_test_split(X_reduced,Y,test_size=0.3,random_state=1)
@@ -73,10 +76,13 @@ def anova_classifier(dataset,label,modelClass='RandomForestClassifier'):
     optimal_k = -1
     max_score = float('-inf')
     for k in numberOfFeatures:
-        selector = SelectKBest(f_classif,k=k)
-        selector.fit(X,Y)
-        columns=selector.get_support(indices=True)
-        important_features = X.iloc[:,columns].columns
+        try:
+            selector = SelectKBest(f_classif,k=k)
+            selector.fit(X,Y)
+            columns=selector.get_support(indices=True)
+            important_features = X.iloc[:,columns].columns
+        except Exception as e:
+            raise type(e)("Error in finding important features")
 
         X_reduced=dataset[important_features]
         X_train,X_test,Y_train,Y_test = train_test_split(X_reduced,Y,test_size=0.3,random_state=1)

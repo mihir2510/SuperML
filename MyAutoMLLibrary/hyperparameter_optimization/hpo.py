@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split
 from utils import get_model, get_features
 from hyperparameter_optimization.hpo_methods import *
-from hyperparameter_optimization.hpo import *
+
 
 def get_trained_model(dataset, label, model_name, task, method_name='standard', max_evals=100, test_size=0.3, random_state=1):
     '''
@@ -36,7 +36,7 @@ def get_trained_model(dataset, label, model_name, task, method_name='standard', 
     elif method_name == 'bayesian_tpe':
         trained_model = bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=max_evals)
     else:
-        print('No hpo method named {}'.format(method_name))
+        raise Exception("'No hpo method named {}'.format(method_name)")
     return trained_model
 
 '''

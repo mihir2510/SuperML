@@ -14,10 +14,13 @@ def select_from_model(dataset, label, model_class):
             Returns:
                     dataset(dataframe) : processed data to be used for training model
     '''
-    selector = SelectFromModel(estimator=model_class())
-    X, Y = dataset[get_features(dataset, label)], dataset[[label]]
-    selector.fit(X, Y)
-    columns = selector.get_support(indices=True)
+    try:
+        selector = SelectFromModel(estimator=model_class())
+        X, Y = dataset[get_features(dataset, label)], dataset[[label]]
+        selector.fit(X, Y)
+        columns = selector.get_support(indices=True)
+    except Exception as e:
+        raise type(e)("Error in select_from_model")
     important_columns = list(X.iloc[:, columns].columns)
     important_columns.append(label)
 

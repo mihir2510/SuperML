@@ -1,7 +1,7 @@
 from sklearn.preprocessing import LabelEncoder
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.under_sampling import RandomUnderSampler
-from MyAutoMLLibrary.utils import get_features
+from utils import get_features
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -19,8 +19,14 @@ def preprocess_data(dataset,label, task='classification'):
             Returns:
                     dataset(dataframe) : processed data to be used for training model
     '''
-    dataset = remove_null(dataset,label)
-    dataset = label_encode(dataset,label) 
+    try:
+        dataset = remove_null(dataset,label)
+    except Exception as e:
+        raise type(e)("Error at remove_null. Check the input data and label")
+    try:
+        dataset = label_encode(dataset,label) 
+    except Exception as e:
+        raise type(e)("Error at label_encode. Check the input data and label")
     if task == 'classification':
         dataset = oversampling(dataset,label)
     #correlation_matrix(dataset,label)
@@ -123,8 +129,11 @@ def dataset_split(dataset,label, test_size=0.3, random_state = 1):
                     dataset(dataframe) : processed data to be used for training model
     '''
     features = get_features(dataset, label)
-    X, Y = dataset[features], dataset[label]
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state=random_state)
+    try:
+        X, Y = dataset[features], dataset[label]
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size, random_state=random_state)
+    except Exception as e:
+        print(e+' '+"Check data and test_size")
     return X_train, X_test, Y_train, Y_test
 
 
@@ -141,9 +150,12 @@ def correlation_matrix(dataset,label):
                     dataset(dataframe) : processed data to be used for training model
     '''
     features = get_features(dataset,label)
-    correlation = dataset[features].corr().abs()
-    f, ax = plt.subplots(figsize=(20,20))
-    sns.heatmap(correlation, cmap='coolwarm', annot=True, ax=ax)
+    try:
+        correlation = dataset[features].corr().abs()
+        f, ax = plt.subplots(figsize=(20,20))
+        sns.heatmap(correlation, cmap='coolwarm', annot=True, ax=ax)
+    except Exception as e:
+        print(e+' '+"Please check the data and label")
     plt.show()
     
 

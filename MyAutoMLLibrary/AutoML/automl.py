@@ -47,13 +47,19 @@ def automl(dataset, label, task, base_layer_models=None, meta_layer_model=None, 
 
     if task == 'prediction':
         metric = 'r2' if metric == None else metric
-        ensemble = SuperLearnerRegressor(base_layer_models, meta_layer_model, n_splits, optimize, max_evals)
-        ensemble.fit(X_train, Y_train)
+        try:
+            ensemble = SuperLearnerRegressor(base_layer_models, meta_layer_model, n_splits, optimize, max_evals)
+            ensemble.fit(X_train, Y_train)
+        except Exception as e:
+            raise type(e)("Please check the values of base_layer_models,meta_layer_models")
 
     elif task == 'classification':
         metric = 'f1' if metric == None else metric
-        ensemble = SuperLearnerClassifier(base_layer_models, meta_layer_model, n_splits, optimize, max_evals)
-        ensemble.fit(X_train, Y_train)
+        try:
+            ensemble = SuperLearnerClassifier(base_layer_models, meta_layer_model, n_splits, optimize, max_evals)
+            ensemble.fit(X_train, Y_train)
+        except Exception as e:
+            raise type(e)("Please check the values of base_layer_models,meta_layer_models")
     
     print('\nEnsemble trained\n')
     stats = get_model_metrics(ensemble, dataset[label], task, X_test, Y_test)

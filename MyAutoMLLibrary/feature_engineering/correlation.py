@@ -17,8 +17,10 @@ def correlation(dataset,label,threshold=0.90):
     features=get_features(dataset,label)
 
     correlation = dataset[features].corr().abs()
-
-    upperTriangular = correlation.where(np.triu(np.ones(correlation.shape), k=1).astype(np.bool))
+    try:
+        upperTriangular = correlation.where(np.triu(np.ones(correlation.shape), k=1).astype(np.bool))
+    except Exception as e:
+        raise type(e)("Error while creating upper triangle matrix")
     toDrop = [feature for feature in upperTriangular.columns if any(upperTriangular[feature] > threshold)]
     features = [feature for feature in features if feature not in toDrop]
     features.append(label)

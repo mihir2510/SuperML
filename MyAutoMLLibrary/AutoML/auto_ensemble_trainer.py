@@ -53,7 +53,13 @@ def auto_ensemble_trainer(dataset, label, task, base_layer_models=None, meta_lay
 
     if task == 'prediction':
         metric = 'r2' if metric == None else metric
-        
+        notallowed=['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier']
+        for model in base_layer_models:
+            if model in notallowed:
+                raise Exception("Invalid base_layer_models for the given task")
+        for model in meta_layer_models:
+            if model in notallowed:
+                raise Exception('Invalid meta_layer_models for the given task')
         base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor'] if base_layer_models == None else base_layer_models
 
         meta_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor'] if meta_layer_models == None else meta_layer_models
@@ -90,7 +96,13 @@ def auto_ensemble_trainer(dataset, label, task, base_layer_models=None, meta_lay
 
     elif task == 'classification':
         metric = 'f1' if metric == None else metric
-        
+        notallowed = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor']
+        for model in base_layer_models:
+            if model in notallowed:
+                raise Exception("Invalid base_layer_models for the given task")
+        for model in meta_layer_models:
+            if model in notallowed:
+                raise Exception('Invalid meta_layer_models for the given task')
         base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier'] if base_layer_models == None else base_layer_models
 
         meta_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier'] if meta_layer_models == None else meta_layer_models

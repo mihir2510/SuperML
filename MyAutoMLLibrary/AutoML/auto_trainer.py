@@ -45,9 +45,26 @@ def auto_train(dataset,label,task,feature_engineering_methods=default_feature_en
     '''
     # dataset = preprocess_data(dataset,label)
     stats = []
-    dataset = remove_null(dataset,label)
-    dataset = label_encode(dataset,label)
-    correlation_matrix(dataset,label)
+    if task=='prediction':
+        notallowed=['LogisticRegression','RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier', 'ExtraTreesClassifier', 'DecisionTreeClassifier']
+        print(task)
+        print(models)
+        for model in models:
+            if model in notallowed:
+                raise Exception("Input valid model list for the given task")
+            
+    else:
+        notallowed=['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor', 'BaggingRegressor', 'GradientBoostingRegressor']
+        for model in models:
+            if model in notallowed:
+                raise Exception("Input valid model list for the given task")
+    try:
+        dataset = remove_null(dataset,label)
+        dataset = label_encode(dataset,label)
+        correlation_matrix(dataset,label)
+    except Exception as e:
+        raise type(e)("Please check the data and the label given exists in the dataset")
+
     original_dataset = dataset.copy()
     for feature_engineering_method in feature_engineering_methods:
         if feature_engineering_method == 'anova':
@@ -58,9 +75,15 @@ def auto_train(dataset,label,task,feature_engineering_methods=default_feature_en
             for model_name in models:
                 print(feature_engineering_method, hpo_method, model_name)
                 if task != 'prediction' and feature_engineering_method != 'pca':
-                    dataset = oversampling(dataset,label)
+                    try:
+                        dataset = oversampling(dataset,label)
+                    except Exception as e:
+                        raise type(e)("Please check the data and label given properly")
                 if feature_engineering_method.startswith('anova') and modelClass:
-                    dataset = techniques_dict[feature_engineering_method](dataset, label, modelClass)
+                    try:
+                        dataset = techniques_dict[feature_engineering_method](dataset, label, modelClass)
+                    except Exception as e:
+                        raise type(e)("Please check the data, label and the modelClass provided properly")
                 elif feature_engineering_method == 'correlation':
                     dataset = techniques_dict[feature_engineering_method](dataset, label, threshold)
                 elif feature_engineering_method == 'select_from_model':
@@ -69,15 +92,20 @@ def auto_train(dataset,label,task,feature_engineering_methods=default_feature_en
                     pass
                 else:
                     dataset = techniques_dict[feature_engineering_method](dataset, label)
-                model = get_trained_model(dataset, label, model_name, task,hpo_method, max_evals, test_size, random_state)
-                features = get_features(dataset, label)
-                X, Y = dataset[features], dataset[label]
-                X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size,random_state=random_state)
-                model_metrics = get_model_metrics(model,label,task,X_test, Y_test)
-                column_names = ['Estimator', 'Feature Engineering Method', 'Hyperparameter Optimisation Method']
-                column_names.extend(list(model_metrics.keys()))
-                model_metrics = list(map(lambda value : round(value, 4), model_metrics.values()))
-                stats.append([model,model_name,feature_engineering_method,hpo_method]+list(model_metrics))
+
+                if model_name=='LogisticRegression' and len(dataset[label].unique())>2:
+                    print("The logistic regression requires the output to be binary classification problem")
+                else:
+                    model = get_trained_model(dataset, label, model_name, task,hpo_method, max_evals, test_size, random_state)
+                    features = get_features(dataset, label)
+                    X, Y = dataset[features], dataset[label]
+                    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size,random_state=random_state)
+                    model_metrics = get_model_metrics(model,label,task,X_test, Y_test)
+                    column_names = ['Estimator', 'Feature Engineering Method', 'Hyperparameter Optimisation Method']
+                    column_names.extend(list(model_metrics.keys()))
+                    model_metrics = list(map(lambda value : round(value, 4), model_metrics.values()))
+                    stats.append([model,model_name,feature_engineering_method,hpo_method]+list(model_metrics))
+                   
 
                 dataset = original_dataset.copy()
 
