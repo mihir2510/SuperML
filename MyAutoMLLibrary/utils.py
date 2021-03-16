@@ -18,8 +18,11 @@ def get_features(dataset,label):
             Returns:
                     features (string)
     '''
-    features = list(dataset.columns)
-    features.remove(label)
+    try:
+        features = list(dataset.columns)
+        features.remove(label)
+    except Exception as e:
+        raise type(e)("Check the label name")
     return features
 
 
@@ -35,7 +38,10 @@ def get_model(name):
             Returns:
                     model (model class reference) 
     '''
-    return map_model.get(name)
+    try:
+        return map_model.get(name)
+    except Exception as e:
+        raise type(e)("Checl the model name")
 
 def pickle_model(model,file_name='pickled_model'):
     '''
@@ -54,7 +60,10 @@ def get_csv(pd_stats,filename='excel_file'):
     print('Stats generated!')
 
 def download_dataset(dataset_path):
-    return pd.read_csv(dataset_path)
+    try:
+        return pd.read_csv(dataset_path)
+    except Exception as e:
+        raise type(e)(" Check the dataset_path ")
 
 def check(func, *args, **kw):
     try:

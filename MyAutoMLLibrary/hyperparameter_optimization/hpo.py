@@ -35,7 +35,7 @@ def get_trained_model(dataset, label, model_name, task, method_name='standard', 
     elif method_name == 'bayesian_tpe':
         trained_model = bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=max_evals)
     else:
-        print('No hpo method named {}'.format(method_name))
+        raise Exception("'No hpo method named {}'.format(method_name)")
     return trained_model
 
 '''

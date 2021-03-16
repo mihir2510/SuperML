@@ -18,10 +18,13 @@ def pca(dataset, label):
     '''
     features = get_features(dataset, label)
     X = dataset[features]
-    pca = PCA(n_components='mle', svd_solver='auto')
-    X = pca.fit_transform(X)
-    X = pd.DataFrame(X)
-    X[label] = dataset[label]
+    try:
+        pca = PCA(n_components='mle', svd_solver='auto')
+        X = pca.fit_transform(X)
+        X = pd.DataFrame(X)
+        X[label] = dataset[label]
+    except Exception as e:
+        raise type(e)("Error at pca.fit_transform")
     return X
     # return [pd.DataFrame(X), []]
 
