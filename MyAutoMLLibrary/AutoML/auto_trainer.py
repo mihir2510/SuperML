@@ -20,7 +20,39 @@ techniques_dict = {
     mod.__name__ : mod for mod in [anova_classifier, anova_regressor, correlation, pca, select_from_model, grid_search, random_search, bayesian_tpe, bayesian_gp]
 }
 
-def auto_train(dataset,label,task,feature_engineering_methods=default_feature_engineering_methods, hpo_methods=default_hyperparamter_methods, models=models ,modelClass=None, sortby=None, download_model = None,excel_file=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1):
+def train(dataset, label, task, feature_engineering_method='all_features', hpo_method='standard', model_name=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1, download_model=None):
+
+    # Preprocessing
+    dataset = preprocess_data(dataset, label, task)
+
+    # Feature Engineering
+    if feature_engineering_method == 'all_features':
+        pass
+    elif feature_engineering_method == 'anova':
+        if task == 'prediction':
+            dataset = anova_regressor(dataset, label)
+        else:
+            dataset = anova_classifier(dataset, label)
+    elif feature_engineering_method == 'correlation':
+        dataset = correlation(dataset, label, threshold)
+    elif feature_engineering_method == 'pca':
+        dataset = pca(dataset, label)
+    else:
+        if task == 'prediction':
+            dataset = select_from_model(dataset, label, RandomForestRegressor)
+        else:
+            dataset = select_from_model(dataset, label, RandomForestClassifier)
+    
+    # Hyperparameter optimisation
+    trained_model = get_trained_model(dataset, label, model_name, task, hpo_method, max_evals, test_size, random_state)
+    print('Model trained')
+
+    if download_model:
+        pickle_model(trained_model, download_model)
+        print('Pickle file generated.')
+    return trained_model
+
+def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_engineering_methods, hpo_methods=default_hyperparamter_methods, models=models ,modelClass=None, sortby=None, download_model = None,excel_file=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1):
     '''
     Implements the whole automl pipeline. Consists of the stages: Datapreprocessing -> Feature Engineering -> HPO -> Ensembling.
 
@@ -59,7 +91,7 @@ def auto_train(dataset,label,task,feature_engineering_methods=default_feature_en
             if model in notallowed:
                 raise Exception("Input valid model list for the given task")
     try:
-        dataset = remove_null(dataset,label)
+        dataset = remove_null(dataset,label) #Change to cumulated function
         dataset = label_encode(dataset,label)
         correlation_matrix(dataset,label)
     except Exception as e:

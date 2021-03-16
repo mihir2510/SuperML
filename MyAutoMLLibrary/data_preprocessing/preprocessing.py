@@ -29,7 +29,7 @@ def preprocess_data(dataset,label, task='classification'):
         raise type(e)("Error at label_encode. Check the input data and label")
     if task == 'classification':
         dataset = oversampling(dataset,label)
-    #correlation_matrix(dataset,label)
+    correlation_matrix(dataset,label)
     return dataset
     # return oversampling(label_encode(remove_null(dataset,label),label),label)
 
