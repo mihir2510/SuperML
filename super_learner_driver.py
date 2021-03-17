@@ -1,9 +1,9 @@
 
-from MyAutoMLLibrary.utils import get_features
-from MyAutoMLLibrary.data_preprocessing.preprocessing import *
-from MyAutoMLLibrary.feature_engineering.correlation import correlation
-from MyAutoMLLibrary.feature_engineering.anova import *
-from MyAutoMLLibrary.ensembling.super_learner import *
+from auto_machine_learning.utils import get_features
+from auto_machine_learning.data_preprocessing.preprocessing import *
+from auto_machine_learning.feature_engineering.correlation import correlation
+from auto_machine_learning.feature_engineering.anova import *
+from auto_machine_learning.ensembling.super_learner import *
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import *
 import pandas as pd
