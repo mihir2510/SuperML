@@ -2,6 +2,7 @@ from sklearn.decomposition import PCA
 from auto_machine_learning.utils import *
 import pandas as pd
 
+#---------------------------------------------------------------------------------------------------------------------#
 
 # The number of features in PCA is estimated with the help of Minka's 
 # MLE - Most Likelihood Estimation
@@ -18,6 +19,7 @@ def pca(dataset, label):
     '''
     features = get_features(dataset, label)
     X = dataset[features]
+
     try:
         pca = PCA(n_components='mle', svd_solver='auto')
         X = pca.fit_transform(X)
@@ -25,6 +27,9 @@ def pca(dataset, label):
         X[label] = dataset[label]
     except Exception as e:
         raise type(e)("Error at pca.fit_transform")
+
     return X
     # return [pd.DataFrame(X), []]
+
+#---------------------------------------------------------------------------------------------------------------------#
 

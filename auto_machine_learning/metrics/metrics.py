@@ -2,6 +2,7 @@ from sklearn import metrics
 from math import sqrt
 import pandas as pd
 
+#---------------------------------------------------------------------------------------------------------------------#
 
 def get_model_metrics(model,label_data,task, X_test, Y_test):
     '''
@@ -42,6 +43,7 @@ def get_model_metrics(model,label_data,task, X_test, Y_test):
 
     return stats
 
+#---------------------------------------------------------------------------------------------------------------------#
 
 def get_model_metrics_ensemble(label_data,task, Y_test, Y_pred):
 
@@ -79,3 +81,5 @@ def get_model_metrics_ensemble(label_data,task, Y_test, Y_pred):
     except Exception as e:
         raise type(e)("Error at get_model_metrics. Please check the given data")
     return stats
+
+#---------------------------------------------------------------------------------------------------------------------#

@@ -4,8 +4,27 @@ from auto_machine_learning.data_preprocessing.preprocessing import dataset_split
 from auto_machine_learning.hyperparameter_optimization.hpo_methods import bayesian_tpe
 import numpy as np
 
+#---------------------------------------------------------------------------------------------------------------------#
+
 class SuperLearnerRegressor():
+    '''
+    Super learner algorithm for regression tasks.
+
+    '''
+
     def __init__(self, base_layer_models=None, meta_model='RandomForestRegressor', n_splits=5, optimize=True, max_evals=100):
+        '''
+        Initializes the object values with given arguments.
+
+                Parameters:
+                        self (object ref)
+                        base_layer_model (list) : list of models to be used at base layer in ensembling
+                        meta_layer_model (string) : name of model to be used at meta layer in ensembling
+                        n_splits(int) : number of splits to be made for cross validation
+                        optimize(boolean) : optimize the process 
+                        max_evals(int) : max number of evaluations to be done
+                        
+        '''
         if base_layer_models == None:
             # base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'ExtraTreesRegressor', 'AdaBoostRegressor','GradientBoostingRegressor']
             base_layer_models = ['LinearRegression', 'Ridge', 'Lasso']
@@ -26,12 +45,39 @@ class SuperLearnerRegressor():
 
 
     def add_models(self, base_layer_models):
+        '''
+        Initializes the base layer models of the object
+
+                Parameters:
+                        self (object ref)
+                        base_layer_model (list) : list of models to be used at base layer in ensembling
+                        
+                        
+        '''
         self.models.extend([get_model(model) for model in base_layer_models])
 
     def set_meta_model(self, meta_model):
+        '''
+            Initializes the meta layer model .
+                Parameters:
+                        self (object ref)
+                        meta_layer_model (string) : name of model to be used at meta layer in ensembling
+                        
+                        
+        '''
         self.meta_model = meta_model
 
     def get_out_of_fold_predictions(self):
+        '''
+        Returns the out of fold predictions
+
+                Parameters:
+                        self (object ref)
+                        
+                Returns:
+                        meta_x (v_stack) : training data for meta layer
+                        meta_y (array) : label for meta layer
+        '''
         meta_X = list()
         meta_Y = list()
         k_folds = KFold(n_splits=self.n_splits, shuffle=True)
@@ -68,6 +114,15 @@ class SuperLearnerRegressor():
         return np.vstack(meta_X), np.asarray(meta_Y)
 
     def fit_base_models(self, X_train, Y_train):
+        '''
+        Trains all the base layer models
+
+                Parameters:
+                        self (object ref)
+                        X_train (dataframe) : training data for base layer
+                        Y_train (series) : labels for base layer
+                        
+        '''
         for model_class in self.models:
             if self.optimize:
                 X_tr, X_te, Y_tr, Y_te = train_test_split(X_train, Y_train, random_state=1, test_size=0.3)
@@ -79,10 +134,27 @@ class SuperLearnerRegressor():
             self.trained_models.append(model)
 
     def fit_meta_model(self, meta_model):
+        '''
+        Fit the model at the meta layer.
+
+                Parameters:
+                        self (object ref)
+                        meta_layer_model (string) : name of model to be used at meta layer in ensembling
+                        
+        '''
         meta_model.fit(self.meta_X, self.meta_Y)
         return meta_model
 
     def fit(self, X, Y):
+        '''
+        Initializes the object values with given arguments.
+
+                Parameters:
+                        self (object ref)
+                        X (dataframe) : data to train
+                        Y (series) : labels for the given dataset
+                        
+        '''
         self.X_train = X
         self.Y_train = Y
         self.meta_X, self.meta_Y = self.get_out_of_fold_predictions()
@@ -90,6 +162,14 @@ class SuperLearnerRegressor():
         self.meta_model = self.fit_meta_model(self.meta_model)
 
     def predict_base_models(self, X):
+        '''
+        Generate predictions for the base layer models
+
+                Parameters:
+                        self (object ref)
+                        X (dataframe) : data to generate predictions
+                        
+        '''
         meta_X = list()
         for model in self.trained_models:
             Y = model.predict(X)
@@ -101,20 +181,52 @@ class SuperLearnerRegressor():
         return meta_X
 
     def predict_meta_model(self, meta_model, meta_X):
+        '''
+        Initializes the object values with given arguments.
+
+                Parameters:
+                        self (object ref)
+                        meta_layer_model (string) : name of model to be used at meta layer in ensembling
+                        meta_x (dataframe) : Data for meta model to train on
+                        
+        '''
         Y_pred = meta_model.predict(meta_X)
         return Y_pred
 
     def predict(self, X):
+        '''
+        Generate predictions
+
+                Parameters:
+                        self (object ref)
+                        X (dataframe) : data to generate predictions
+                        
+        '''
         meta_X = self.predict_base_models(X)
         Y_pred = self.predict_meta_model(self.meta_model, meta_X)
         return Y_pred
 
-
-
-#------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
 
 class SuperLearnerClassifier():
+    '''
+    Super learner algorithm for classification tasks.
+
+    '''
+
     def __init__(self, base_layer_models=None, meta_model='RandomForestClassifier', n_splits=5, optimize=True, max_evals=100):
+        '''
+        Initializes the object values with given arguments.
+
+                Parameters:
+                        self (object ref)
+                        base_layer_model (list) : list of models to be used at base layer in ensembling
+                        meta_layer_model (string) : name of model to be used at meta layer in ensembling
+                        n_splits(int) : number of splits to be made for cross validation
+                        optimize(boolean) : optimize the process 
+                        max_evals(int) : max number of evaluations to be done
+                        
+        '''
         if base_layer_models == None:
             #base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'GradientBoostingClassifier','ExtraTreesClassifier','AdaBoostClassifier']
             base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier']
@@ -134,12 +246,39 @@ class SuperLearnerClassifier():
         self.max_evals = max_evals
 
     def add_models(self, base_layer_models):
+        '''
+        Initializes the base layer models of the object
+
+                Parameters:
+                        self (object ref)
+                        base_layer_model (list) : list of models to be used at base layer in ensembling
+                        
+                        
+        '''
         self.models.extend([get_model(model) for model in base_layer_models])
 
     def set_meta_model(self, meta_model):
+        '''
+            Initializes the meta layer model .
+                Parameters:
+                        self (object ref)
+                        meta_layer_model (string) : name of model to be used at meta layer in ensembling
+                        
+                        
+        '''
         self.meta_model = meta_model
 
     def get_out_of_fold_predictions(self):
+        '''
+        Returns the out of fold predictions
+
+                Parameters:
+                        self (object ref)
+                        
+                Returns:
+                        meta_x (v_stack) : training data for meta layer
+                        meta_y (array) : label for meta layer
+        '''
         meta_X = list()
         meta_Y = list()
         k_folds = KFold(n_splits=self.n_splits, shuffle=True)
@@ -162,6 +301,15 @@ class SuperLearnerClassifier():
         return np.vstack(meta_X), np.asarray(meta_Y)
 
     def fit_base_models(self, X_train, Y_train):
+        '''
+        Trains all the base layer models
+
+                Parameters:
+                        self (object ref)
+                        X_train (dataframe) : training data for base layer
+                        Y_train (series) : labels for base layer
+                        
+        '''
         X_tr, X_te, Y_tr, Y_te = train_test_split(X_train, Y_train, test_size=0.3, random_state=1)
         for model_class in self.models:
             if self.optimize:
@@ -173,10 +321,27 @@ class SuperLearnerClassifier():
             self.trained_models.append(model)
 
     def fit_meta_model(self, meta_model):
+        '''
+        Fit the model at the meta layer.
+
+                Parameters:
+                        self (object ref)
+                        meta_layer_model (string) : name of model to be used at meta layer in ensembling
+                        
+        '''
         meta_model.fit(self.meta_X, self.meta_Y)
         return meta_model
 
     def fit(self, X, Y):
+        '''
+        Initializes the object values with given arguments.
+
+                Parameters:
+                        self (object ref)
+                        X (dataframe) : data to train
+                        Y (series) : labels for the given dataset
+                        
+        '''
         self.X_train = X
         self.Y_train = Y
         self.meta_X, self.meta_Y = self.get_out_of_fold_predictions()
@@ -184,6 +349,14 @@ class SuperLearnerClassifier():
         self.fit_meta_model(self.meta_model)
 
     def predict_base_models(self, X):
+        '''
+        Generate predictions for the base layer models
+
+                Parameters:
+                        self (object ref)
+                        X (dataframe) : data to generate predictions
+                        
+        '''
         meta_X = list()
         for model in self.trained_models:
             Y = model.predict_proba(X)
@@ -193,10 +366,29 @@ class SuperLearnerClassifier():
         return meta_X
 
     def predict_meta_model(self, meta_model, meta_X):
+        '''
+        Initializes the object values with given arguments.
+
+                Parameters:
+                        self (object ref)
+                        meta_layer_model (string) : name of model to be used at meta layer in ensembling
+                        meta_x (dataframe) : Data for meta model to train on
+                        
+        '''
         Y_pred = meta_model.predict(meta_X)
         return Y_pred
 
     def predict(self, X):
+        '''
+        Generate predictions
+
+                Parameters:
+                        self (object ref)
+                        X (dataframe) : data to generate predictions
+                        
+        '''
         meta_X = self.predict_base_models(X)
         Y_pred = self.predict_meta_model(self.meta_model, meta_X)
         return Y_pred
+
+#---------------------------------------------------------------------------------------------------------------------#

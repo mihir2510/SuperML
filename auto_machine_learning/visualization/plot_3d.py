@@ -24,15 +24,11 @@ def surface_3d(stats, Z,  X='Estimator', Y=['Feature Engineering Method', 'Hyper
     for group in xy.values():
         z.append(group)
 
-    # x = ['Linear','Ridge','Lasso']
-    # y = ['PCA','ANOVA','SKLEARN']
-    # z = [[0.85, 0.92, 0.93],[0.88, 0.95, 0.96],[0.84, 0.915, 0.94]]
-
     fig = go.Figure(data=[go.Surface(z=z,y=y,x=x)])
     
     fig.update_layout(title='', autosize=True,width=1000, height=1000)
     
-    fig.show()
+    #fig.show()
 
-    # with open('index.html', 'w') as f:
-    #     f.write(fig.to_html(full_html=False, include_plotlyjs='https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly.min.js'))
+    with open('index.html', 'w') as f:
+        f.write(fig.to_html(full_html=False, include_plotlyjs='https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly.min.js'))

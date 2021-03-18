@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-# from os import path
 
 label_map = {
     'boston': 'Target',
@@ -24,8 +23,12 @@ def load_dataset(name):
                     dataset(dataframe) : data for training
                     label(string) : name of the target column for the given dataset
     '''
+    
     try:
-        dataset = pd.read_csv('.\datasets\{}.csv'.format(name))
+        path = os.path.dirname(__file__)
+        dataset = pd.read_csv('{0}\{1}.csv'.format(path, name))
     except Exception as e:
         raise type(e)("Error at load_dataset. Please check the name of the dataaset")
+    
+    #Return Dataset and Label
     return dataset, label_map[name]

@@ -4,19 +4,21 @@ from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from math import ceil, sqrt, log2
 
-def anova_regressor(dataset,label,modelClass='RandomForestRegressor'):
+#---------------------------------------------------------------------------------------------------------------------#
+
+def anova_regressor(dataset,label,anova_estimator='RandomForestRegressor'):
     '''
     Anova (analysis of variance) os used to select features 
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
                     label (string): target column of the dataframe  
-                    modelClass (model class reference)
+                    anova_estimator (model class reference)
 
             Returns:
                     dataset(dataframe) : processed data to be used for training model
     '''
-    modelClass=get_model(modelClass)
+    anova_estimator=get_model(anova_estimator)
     features = get_features(dataset, label)
     n = len(features)
     # List containing the different values to consider as K
@@ -35,7 +37,7 @@ def anova_regressor(dataset,label,modelClass='RandomForestRegressor'):
 
         X_reduced=dataset[important_features]
         X_train,X_test,Y_train,Y_test = train_test_split(X_reduced,Y,test_size=0.3,random_state=1)
-        model=modelClass()
+        model=anova_estimator()
         model.fit(X_train,Y_train)
 
         score=model.score(X_test,Y_test)
@@ -55,19 +57,21 @@ def anova_regressor(dataset,label,modelClass='RandomForestRegressor'):
     X = dataset[important_features]
     return X
 
-def anova_classifier(dataset,label,modelClass='RandomForestClassifier'):
+#---------------------------------------------------------------------------------------------------------------------#
+
+def anova_classifier(dataset,label,anova_estimator='RandomForestClassifier'):
     '''
     Anova (analysis of variance) os used to select features 
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
                     label (string): target column of the dataframe  
-                    modelClass (model class reference)
+                    anova_estimator (model class reference)
 
             Returns:
                     dataset(dataframe) : processed data to be used for training model
     '''
-    modelClass = get_model(modelClass)
+    anova_estimator = get_model(anova_estimator)
     features = get_features(dataset, label)
     n = len(features)
     # List containing the different values to consider as K
@@ -76,6 +80,7 @@ def anova_classifier(dataset,label,modelClass='RandomForestClassifier'):
     optimal_k = -1
     max_score = float('-inf')
     for k in numberOfFeatures:
+
         try:
             selector = SelectKBest(f_classif,k=k)
             selector.fit(X,Y)
@@ -86,7 +91,7 @@ def anova_classifier(dataset,label,modelClass='RandomForestClassifier'):
 
         X_reduced=dataset[important_features]
         X_train,X_test,Y_train,Y_test = train_test_split(X_reduced,Y,test_size=0.3,random_state=1)
-        model=modelClass()
+        model=anova_estimator()
         model.fit(X_train,Y_train)
 
         Y_pred = model.predict(X_test)
@@ -103,3 +108,5 @@ def anova_classifier(dataset,label,modelClass='RandomForestClassifier'):
     important_features.append(label)
     X = dataset[important_features]
     return X
+
+#---------------------------------------------------------------------------------------------------------------------#

@@ -5,7 +5,11 @@ from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 import pickle
 import pandas as pd
 
+#---------------------------------------------------------------------------------------------------------------------#
+
 models = [LinearRegression, Ridge, Lasso, DecisionTreeRegressor, RandomForestRegressor, AdaBoostRegressor, ExtraTreesRegressor, BaggingRegressor, GradientBoostingRegressor, LogisticRegression, RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, GradientBoostingClassifier, ExtraTreesClassifier, DecisionTreeClassifier]
+
+#---------------------------------------------------------------------------------------------------------------------#
 
 def get_features(dataset,label):
     '''
@@ -28,6 +32,8 @@ def get_features(dataset,label):
 
 map_model = {model.__name__: model for model in models}
 
+#---------------------------------------------------------------------------------------------------------------------#
+
 def get_model(name):
     '''
     Returns the model corresponding to the model name
@@ -43,6 +49,8 @@ def get_model(name):
     except Exception as e:
         raise type(e)("Checl the model name")
 
+#---------------------------------------------------------------------------------------------------------------------#
+
 def pickle_model(model,file_name='pickled_model'):
     '''
     Saves the model in a pickle format for later use
@@ -55,15 +63,21 @@ def pickle_model(model,file_name='pickled_model'):
     '''
     pickle.dump(model, open(file_name+'.sav', 'wb'))
 
+#---------------------------------------------------------------------------------------------------------------------#
+
 def get_csv(pd_stats,filename='excel_file'):
     pd_stats.to_excel(filename+'.xlsx')
     print('Stats generated!')
+
+#---------------------------------------------------------------------------------------------------------------------#
 
 def download_dataset(dataset_path):
     try:
         return pd.read_csv(dataset_path)
     except Exception as e:
         raise type(e)(" Check the dataset_path ")
+
+#---------------------------------------------------------------------------------------------------------------------#
 
 def check(func, *args, **kw):
     try:
@@ -72,5 +86,5 @@ def check(func, *args, **kw):
     except Exception:
         return False
 
-
+#---------------------------------------------------------------------------------------------------------------------#
 

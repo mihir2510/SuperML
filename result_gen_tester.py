@@ -13,11 +13,11 @@ models = list(map_model.keys())
 # models = models[9:]
 # print(models)
 # models = ['LogisticRegression', 'RandomForestClassifier']
-models = ['LogisticRegression']
-#dataset = pd.read_csv('http://54.196.8.61:3000/uploads/boston/Boston.csv')
-dataset,label = load_dataset('titanic')
-print('dataset downloaded')
-#label = 'Target'
+models = ['LinearRegression']
+dataset = pd.read_csv('http://54.196.8.61:3000/uploads/boston/Boston.csv')
+#dataset,label = load_dataset('titanic')
+#print('dataset downloaded')
+label = 'Target'
 # dataset.drop(['Unnamed: 0'],axis=1,inplace=True)
 # dataset = anova_regressor(dataset, label, LinearRegression)
 # X_train, X_test, Y_train, Y_test = dataset_split(dataset, label)
@@ -27,7 +27,7 @@ print('dataset downloaded')
 # base_model.fit(X_train, Y_train)
 # print('Accuracy for base model:',base_model.score(dataset[get_features(dataset,label)], dataset[label]))
 
-stats,model = auto_trainer(dataset, label, 'classification', models=models, modelClass='RandomForestClassifier', hpo_methods=['bayesian_gp'],download_model='tester',excel_file='excel_file')#,'grid_search','random_search', 'bayesian_tpe'],sortby='r2')#])
+stats,model = auto_trainer(dataset, label, 'prediction', models=models, anova_estimator='RandomForestRegressor', hpo_methods=['bayesian_gp'],download_model='tester',excel_file='excel_file')#,'grid_search','random_search', 'bayesian_tpe'],sortby='r2')#])
 
 """with open('stats2.txt','w') as f:
 f.write(str(stats))"""

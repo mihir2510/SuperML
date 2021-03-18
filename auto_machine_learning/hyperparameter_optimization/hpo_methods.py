@@ -5,6 +5,8 @@ from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
 from auto_machine_learning.utils import get_features
 from auto_machine_learning.constants import *
 
+#---------------------------------------------------------------------------------------------------------------------#
+
 def grid_search(model, X_train, Y_train):
     '''
     Traditonal grid search method. It evaluates all the possible combinations
@@ -17,6 +19,7 @@ def grid_search(model, X_train, Y_train):
             Returns:
                     model (model object) : the trained model on which hpo is performed
     '''
+
     try:
         grid_search_model = GridSearchCV(model(), hyperparameters[model])
         grid_search_model.fit(X_train, Y_train)
@@ -24,7 +27,10 @@ def grid_search(model, X_train, Y_train):
         optimized_model.fit(X_train, Y_train)
     except Exception as e:
         raise type(e)("Error at grid_search. Check data and model")
+
     return optimized_model
+
+#---------------------------------------------------------------------------------------------------------------------#
 
 def random_search(model, X_train, Y_train):
     '''
@@ -38,6 +44,7 @@ def random_search(model, X_train, Y_train):
             Returns:
                     model (model object) : the trained model on which hpo is performed
     '''
+
     try:
         random_search_model = RandomizedSearchCV(model(), hyperparameters[model])
         random_search_model.fit(X_train, Y_train)
@@ -46,7 +53,10 @@ def random_search(model, X_train, Y_train):
         optimized_model.fit(X_train, Y_train)
     except Exception as e:
         raise type(e)("Error at random_search. Check data and model")
+
     return optimized_model
+
+#---------------------------------------------------------------------------------------------------------------------#
 
 def bayesian_gp(model, X_train, Y_train):
     '''
@@ -60,6 +70,7 @@ def bayesian_gp(model, X_train, Y_train):
             Returns:
                     model (model object) : the trained model on which hpo is performed
     '''
+
     try:
         bayesian_gp_model = BayesSearchCV(model(), hyperparameters[model])
         bayesian_gp_model.fit(X_train, Y_train)
@@ -68,7 +79,10 @@ def bayesian_gp(model, X_train, Y_train):
         optimized_model.fit(X_train, Y_train)
     except Exception as e:
         raise type(e)("Error at bayesian_gp. Check data and model")
+
     return optimized_model 
+
+#---------------------------------------------------------------------------------------------------------------------#
     
 def bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=100):
     '''
@@ -103,6 +117,7 @@ def bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=100):
 
         loss = -r2_score(Y_test, Y_pred) if task == 'prediction' else -f1_score(Y_test, Y_pred)
         return {'loss': loss, 'status': STATUS_OK}
+    
     try:
         best_hyperparameters = fmin(fn=objective_func, space=hyperopt_hyperparameters[model], algo=tpe.suggest, trials=Trials(), max_evals=max_evals)
         
@@ -116,3 +131,4 @@ def bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=100):
         raise type(e)("Error at bayesian_tpe. Check data and model")
 
     return optimized_model
+#---------------------------------------------------------------------------------------------------------------------#

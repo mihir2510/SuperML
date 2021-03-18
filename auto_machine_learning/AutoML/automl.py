@@ -7,27 +7,24 @@ from auto_machine_learning.hyperparameter_optimization.hpo import get_trained_mo
 import pandas as pd
 import sklearn
 
-def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model=None, n_splits=5, optimize=True, max_evals=100, download_model = None, metric=None):
+def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model=None, n_splits=5, optimize=True, max_evals=100, download_model = None, metric=None):   
     '''
-    Implements the whole automl pipeline. Consists of the stages: Datapreprocessing -> Feature Engineering -> HPO -> Ensembling.
-
+        Implements Automated Ensembling based on the base layer and meta layer models provided.
             Parameters:
                     dataset(dataframe) : data to be used for training model
                     label (string): target column of the dataframe  
                     task (string) : type of task 
-                    base_layer_models (list) : list of models to be used at base layer in ensembling
-                    meta_layer_models (list) : list of models to be used at meta layer in ensembling
                     n_splits(int) : number of splits to be made for cross validation
                     optimize(boolean) : optimize the process
                     max_evals(int) :  max number of evaluations to be done
-                    download_model(boolean) : save the final trained ensemble
+                    download_model(boolean) : save the final trained ensembleo
                     metric(string)
-            Returns:
-                    stats (dictionary): contains the metrics for given data
+            Returns:     
+                    ensemble(model object) : trained super learner model   
     '''
+
     # Data Preprocessing
     prepocessed_dataset = preprocess_data(dataset, label, task)
-
     print('\nData Preprocessed.\n')
 
     # Feature Engineering
@@ -46,7 +43,6 @@ def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model
     X_train, X_test, Y_train, Y_test = dataset_split(feature_engineered_dataset, label)
 
     # Ensembling
-
     if task == 'prediction':
         metric = 'r2' if metric == None else metric
         try:
@@ -62,15 +58,18 @@ def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model
             ensemble.fit(X_train, Y_train)
         except Exception as e:
             raise type(e)("Please check the values of base_layer_models,meta_layer_models")
-    
     print('\nEnsemble trained\n')
+
+    #Get Statistics
     stats = get_model_metrics(ensemble, dataset[label], task, X_test, Y_test)
     print(stats)
     
+    #Download model    
     if download_model:
         pickle_model(ensemble, 'automl-ensembled-file')
         print('\nPickle file generated.\n')
     
+    #Return Model
     print('\nEnsemble Returned.\n')
     return ensemble
 
@@ -78,25 +77,27 @@ def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model
 def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=None, n_splits=5, optimize=True, max_evals=100, download_model = None, metric=None, sortby=False, excel_file=None):
     '''
     Implements the whole automl pipeline. Consists of the stages: Datapreprocessing -> Feature Engineering -> HPO -> Ensembling.
+    It creates a super learner using the base layer and meta layer to combine the performance of various models.
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
                     label (string): target column of the dataframe  
                     task (string) : type of task 
-                    download_model(string) : name of the file to be used for saving model
                     base_layer_models (list) : list of models to be used at base layer in ensembling
                     meta_layer_models (list) : list of models to be used at meta layer in ensembling
                     n_splits(int) : number of splits to be made for cross validation
                     optimize(boolean) : optimize the process 
                     max_evals(int) : max number of evaluations to be done
-                    download_model(boolean) : save the final trained ensemble
+                    download_model(string) : name of the file to be used for saving model
                     metric(string) : metric to select best model
                     sortby (string) : sort the result as per metric
                     excel_file(strig) : name of the file to be used for saving stats
 
             Returns:
                     stats (dictionary): contains the metrics for given data
+                    ensemble (model object) : trained superlearner model based on given metric
     '''
+
     # Data Preprocessing
     prepocessed_dataset = preprocess_data(dataset, label, task)
 
@@ -112,13 +113,11 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
         feature_engineered_dataset = anova.anova_classifier(prepocessed_dataset, label)
     else:
         feature_engineered_dataset = prepocessed_dataset.copy()
-
     print('\nFeature Engineering performed\n')
 
     X_train, X_test, Y_train, Y_test = dataset_split(feature_engineered_dataset, label)
 
     # Ensembling
-
     if task == 'prediction':
         metric = 'r2' if metric == None else metric
         notallowed=['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier']
@@ -204,20 +203,23 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
                 temp.append(', '.join([model.__name__ for model in ensemble.models]))
                 temp.extend(list(stats.values()))
                 stats_list.append(temp)
-    # print('\nEnsemble created\n')
-    
     print('\nEnsemble trained\n')
     
+    #To sort on basis of metric provided
     if sortby:
         index = column_names.index(sortby)
         stats_list.sort(key= lambda x: x[index],reverse=True)
+
+    #Download model
     if download_model:
         pickle_model(stats_list[0][0],download_model)       
     pd_stats = pd.DataFrame(stats_list)
     pd_stats.drop(pd_stats.columns[0], axis=1,inplace=True)
     pd_stats.columns = column_names
     
+    #Download Excel File
     if excel_file:
         get_csv(pd_stats,excel_file)
 
+    #Return statistics in form of dataframe and model
     return pd_stats,stats_list[0][0]
