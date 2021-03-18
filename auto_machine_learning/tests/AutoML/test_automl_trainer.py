@@ -1,4 +1,4 @@
-from auto_machine_learning.AutoML.auto_trainer import *
+from auto_machine_learning.automl.auto_trainer import *
 from auto_machine_learning.utils import check
 from auto_machine_learning.datasets.load_dataset import load_dataset
 from auto_machine_learning.data_preprocessing.preprocessing import dataset_split
