@@ -3,30 +3,26 @@ import pandas as pd
 import numpy as np
 
 
-def surface_3d(stats, Z,  X='Estimator', Y=['Feature Engineering Method', 'Hyperparameter Optimisation Method']):
+def surface_3d(stats, Z,  X='Estimator', Y=['Feature Engineering Method', 'Hyperparameter Optimisation Method'],width=750, height=750):
 
-    #stats['concatenated'] = stats['Feature Engineering Method'] + ' ' + stats['Hyperparameter Optimisation Method']
-    x = list(pd.unique(stats['Estimator']))
+    x_axis_data = list(pd.unique(stats['Estimator']))
     stats['concatenated'] = stats[Y].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
-    y = list(pd.unique(stats['concatenated']))
+    y_axis = list(pd.unique(stats['concatenated']))
 
-    xy = {}
+    y_axis_data = {}
     for index, row in stats.iterrows():
         key = row['concatenated']
-        if key not in xy:
-            xy[key] = []
-        xy[key].append(row[Z])
+        if key not in y_axis_data:
+            y_axis_data[key] = []
+        y_axis_data[key].append(row[Z])
     
-    print(x)
-    print(y)
+    z_axis_data = []
+    for group in y_axis_data.values():
+        z_axis_data.append(group)
 
-    z = []
-    for group in xy.values():
-        z.append(group)
-
-    fig = go.Figure(data=[go.Surface(z=z,y=y,x=x)])
+    fig = go.Figure(data=[go.Surface(z=z_axis_data,y=y_axis,x=x_axis_data)])
     
-    fig.update_layout(title='', autosize=True,width=1000, height=1000)
+    fig.update_layout(title='3-D Surface Plot', autosize=True,width=width, height=height)
     
     #fig.show()
 
