@@ -1,34 +1,26 @@
 import plotly.graph_objects as go
 import pandas as pd
 
-
-
-
 def bar_2d(stats, Y, X='Estimator', groups=['Feature Engineering Method','Hyperparameter Optimisation Method']):
     
-    print(stats)
-
-    x = list(pd.unique(stats[X]))
-    # stats['concatenated'] = stats[group].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
+    x_axis_data = list(pd.unique(stats[X]))
     stats['concatenated'] = stats[groups].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
-    #
-    xy={}
+    y_axis_data={}
+
     for index, row in stats.iterrows():
         key = 'concatenated'
-        if row[key] not in xy:
-            xy[row[key]] = []
-        xy[row[key]].append(row[Y])
-    print(xy)
+        if row[key] not in y_axis_data:
+            y_axis_data[row[key]] = []
+        y_axis_data[row[key]].append(row[Y])
 
     bar=[]
-    for group in xy:
-        bar.append(go.Bar(name=group, x=x, y=xy[group]))
+    for group in y_axis_data:
+        bar.append(go.Bar(name=group, x=x_axis_data, y=y_axis_data[group]))
 
     fig = go.Figure(data=bar)
     
     # Change the bar mode
     fig.update_layout(barmode='group')
-
     fig.update_yaxes(range=(stats[Y].min()-0.05, stats[Y].max()+0.05))
     
     #fig.show()

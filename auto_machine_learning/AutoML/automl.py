@@ -7,7 +7,7 @@ from auto_machine_learning.hyperparameter_optimization.hpo import get_trained_mo
 import pandas as pd
 import sklearn
 
-def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model=None, n_splits=5, optimize=True, max_evals=100, download_model = None, metric=None):   
+def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model=None, n_splits=5, optimize=True, max_evals=100, download_model = None):   
     '''
         Implements Automated Ensembling based on the base layer and meta layer models provided.
             Parameters:
@@ -74,7 +74,7 @@ def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model
     return ensemble
 
 
-def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=None, n_splits=5, optimize=True, max_evals=100, download_model = None, metric=None, sortby=False, excel_file=None):
+def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=None, n_splits=5, optimize=True, max_evals=100, download_model = None, metric=None, sortby=None, excel_file=None):
     '''
     Implements the whole automl pipeline. Consists of the stages: Datapreprocessing -> Feature Engineering -> HPO -> Ensembling.
     It creates a super learner using the base layer and meta layer to combine the performance of various models.
