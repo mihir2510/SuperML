@@ -13,7 +13,8 @@ diabetes_dataset, diabetes_label = load_dataset('diabetes')
 def test_hpo():
     for model in [LinearRegression, Lasso, Ridge]:
         for method_name in ['grid_search', 'random_search', 'bayesian_tpe']:
-            check(get_trained_model, boston_dataset, boston_label, model.__name__, 'prediction', method_name)
+            # get_trained_model(boston_dataset, boston_label, model.__name__, 'prediction', method_name)
+            assert check(get_trained_model, boston_dataset, boston_label, model.__name__, 'prediction', method_name, max_evals=10)
     for model in [LogisticRegression, RandomForestClassifier]:
         for method_name in ['grid_search', 'random_search', 'bayesian_tpe']:
-            check(get_trained_model, heart_dataset, heart_label, model.__name__, 'prediction', method_name)
+            assert check(get_trained_model, diabetes_dataset, diabetes_label, model.__name__, 'classification', method_name, max_evals=10)

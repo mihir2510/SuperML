@@ -12,7 +12,7 @@ from auto_machine_learning.metrics.metrics import get_model_metrics
 import pandas as pd
 
 default_feature_engineering_methods = ['all_features','anova', 'correlation', 'pca', 'select_from_model']
-default_hyperparamter_methods = ['standard','grid_search', 'random_search', 'bayesian_tpe', 'bayesian_gp']
+default_hyperparamter_methods = ['standard','grid_search', 'random_search', 'bayesian_tpe']
 models = list(map_model.keys())
 
 
@@ -21,14 +21,14 @@ techniques_dict = {
 }
 
 
-def train(dataset, label, task, feature_engineering_method='all_features', hpo_method='standard', model_name=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1, download_model=None): 
+def train(dataset, label, task, feature_engineering_method='all_features', hpo_method='standard', model_name=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1, download_model=None):
     '''
     Implements a pipeline for training the machine learning model. Consists of the stages: Datapreprocessing -> Feature Engineering -> training -> Hpo.
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe  
-                    task (string) : type of task 
+                    label (string): target column of the dataframe
+                    task (string) : type of task
                     feature_engineering_methods(string): feature engineering method to be implemented
                     hpo_methods(string): list of hpo methods to be implemented
                     model_name(string) : Name of the model to be trained
@@ -37,12 +37,12 @@ def train(dataset, label, task, feature_engineering_method='all_features', hpo_m
                     test_size(float) : fraction of data to be used for testing
                     random_state(int) : random state to follow
                     download_model(string) : name of the file to be used for saving model
-                    
-                   
+
+
             Returns:
                     model (mode object): trained model
     '''
-    
+
     # Preprocessing
     dataset = preprocess_data(dataset, label, task)
 
@@ -64,7 +64,7 @@ def train(dataset, label, task, feature_engineering_method='all_features', hpo_m
         else:
             dataset = select_from_model(dataset, label, RandomForestClassifier)
     print('Feature Engineering Complete')
-    
+
     # Hyperparameter optimisation and training the model
     trained_model = get_trained_model(dataset, label, model_name, task, hpo_method, max_evals, test_size, random_state)
     print('Model trained')
@@ -77,15 +77,15 @@ def train(dataset, label, task, feature_engineering_method='all_features', hpo_m
 
 #---------------------------------------------------------------------------------------------------------------------#
 
-def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_engineering_methods, hpo_methods=default_hyperparamter_methods, models=models ,anova_estimator=None, sortby=None, download_model = None,excel_file=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1):
+def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_engineering_methods, hpo_methods=default_hyperparamter_methods, models=[] ,anova_estimator=None, sortby=None, download_model = None,excel_file=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1):
     '''
     Implements the whole automl pipeline. Consists of the stages: Datapreprocessing -> Feature Engineering -> HPO.
     Helps in generating results for various combinations of Feature Engineering methods, HPO methods and models
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe  
-                    task (string) : type of task 
+                    label (string): target column of the dataframe
+                    task (string) : type of task
                     feature_engineering_methods(list): list of feature engineering methods to be implemented
                     hpo_methods(list): list of hpo methods to be implemented
                     models(list): list of models to be used for generating results
@@ -100,20 +100,24 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
             Returns:
                     stats (dictionary): contains the metrics for given data
                     model (mode object): trained model
-    
+
     '''
 
     # dataset = preprocess_data(dataset,label)
     stats = []
     if task=='prediction':
+        if models == []:
+            models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor', 'BaggingRegressor', 'GradientBoostingRegressor']
         notallowed=['LogisticRegression','RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier', 'ExtraTreesClassifier', 'DecisionTreeClassifier']
         print(task)
         print(models)
         for model in models:
             if model in notallowed:
                 raise Exception("Input valid model list for the given task")
-            
+
     else:
+        if models == []:
+            models = ['LogisticRegression','RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier', 'ExtraTreesClassifier', 'DecisionTreeClassifier']
         notallowed=['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor', 'BaggingRegressor', 'GradientBoostingRegressor']
         for model in models:
             if model in notallowed:
@@ -153,7 +157,7 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
                     pass
                 else:
                     dataset = techniques_dict[feature_engineering_method](dataset, label)
-                
+
                 #Model Training
                 if model_name=='LogisticRegression' and len(dataset[label].unique())>2:
                     print("The logistic regression requires the output to be binary classification problem")
@@ -167,25 +171,24 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
                     column_names.extend(list(model_metrics.keys()))
                     model_metrics = list(map(lambda value : round(value, 4), model_metrics.values()))
                     stats.append([model,model_name,feature_engineering_method,hpo_method]+list(model_metrics))
-                   
+
 
                 dataset = original_dataset.copy()
     #To sort on basis of metric provided
     if sortby:
         index = column_names.index(sortby)
         stats.sort(key= lambda x: x[index],reverse=True)
-    
+
     # To download model
     if download_model:
-        pickle_model(stats[0][0],download_model)       
+        pickle_model(stats[0][0],download_model)
     pd_stats = pd.DataFrame(stats)
     pd_stats.drop(pd_stats.columns[0], axis=1,inplace=True)
     pd_stats.columns = column_names
-    
+
     #Download excelsheet
     if excel_file:
         get_csv(pd_stats,excel_file)
-    
+
     #Return statistics in form of dataframe and model
     return pd_stats,stats[0][0]
-

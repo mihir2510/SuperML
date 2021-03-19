@@ -8,11 +8,11 @@ from math import ceil, sqrt, log2
 
 def anova_regressor(dataset,label,anova_estimator='RandomForestRegressor'):
     '''
-    Anova (analysis of variance) os used to select features 
+    Anova (analysis of variance) is used to select features
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe  
+                    label (string): target column of the dataframe
                     anova_estimator (model class reference)
 
             Returns:
@@ -32,7 +32,8 @@ def anova_regressor(dataset,label,anova_estimator='RandomForestRegressor'):
             selector.fit(X,Y)
             columns=selector.get_support(indices=True)
             important_features = X.iloc[:,columns].columns
-        except:
+        except Exception as e:
+            print(e)
             raise Exception("Error in finding important features ")
 
         X_reduced=dataset[important_features]
@@ -61,11 +62,11 @@ def anova_regressor(dataset,label,anova_estimator='RandomForestRegressor'):
 
 def anova_classifier(dataset,label,anova_estimator='RandomForestClassifier'):
     '''
-    Anova (analysis of variance) os used to select features 
+    Anova (analysis of variance) is used to select features
 
             Parameters:
                     dataset(dataframe) : data to be used for training model
-                    label (string): target column of the dataframe  
+                    label (string): target column of the dataframe
                     anova_estimator (model class reference)
 
             Returns:
@@ -100,7 +101,7 @@ def anova_classifier(dataset,label,anova_estimator='RandomForestClassifier'):
         if score>max_score:
             max_score = score
             optimal_k = k
-    
+
     selector = SelectKBest(f_classif,k=optimal_k)
     selector.fit(X,Y)
     column  = selector.get_support(indices=True)

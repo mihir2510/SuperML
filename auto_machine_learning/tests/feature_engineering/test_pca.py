@@ -3,8 +3,8 @@ from auto_machine_learning.utils import check
 from auto_machine_learning.datasets.load_dataset import load_dataset
 
 boston_dataset, boston_label = load_dataset('boston')
-titanic_dataset, titanic_label = load_dataset('titanic')
+diabetes_dataset, diabetes_label = load_dataset('diabetes')
 
 def test_pca():
-    check(pca, boston_dataset, boston_label)
-    check(pca, titanic_dataset, titanic_label)
+    assert check(pca, boston_dataset, boston_label)
+    assert check(pca, diabetes_dataset, diabetes_label)
