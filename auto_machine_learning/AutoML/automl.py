@@ -118,7 +118,12 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
     X_train, X_test, Y_train, Y_test = dataset_split(feature_engineered_dataset, label)
 
     # Ensembling
+ 
     if task == 'prediction':
+        base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor','BaggingRegressor','GradientBoostingRegressor'] if base_layer_models == None else base_layer_models
+
+        meta_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor','BaggingRegressor','GradientBoostingRegressor'] if meta_layer_models == None else meta_layer_models
+
         metric = 'r2' if metric == None else metric
         notallowed=['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier']
         for model in base_layer_models:
@@ -127,10 +132,7 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
         for model in meta_layer_models:
             if model in notallowed:
                 raise Exception('Invalid meta_layer_models for the given task')
-        base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor'] if base_layer_models == None else base_layer_models
-
-        meta_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor'] if meta_layer_models == None else meta_layer_models
-
+   
         trained_models = []
         for base_layer_model in base_layer_models:
             trained_model = get_trained_model(feature_engineered_dataset, label, base_layer_model, task, 'bayesian_tpe')
@@ -162,17 +164,19 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
                 stats_list.append(temp)
 
     elif task == 'classification':
+        base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier'] if base_layer_models == None else base_layer_models
+
+        meta_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier'] if meta_layer_models == None else meta_layer_models
+        
         metric = 'f1' if metric == None else metric
-        notallowed = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor']
+        notallowed = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor','BaggingRegressor','GradientBoostingRegressor']
         for model in base_layer_models:
             if model in notallowed:
                 raise Exception("Invalid base_layer_models for the given task")
         for model in meta_layer_models:
             if model in notallowed:
                 raise Exception('Invalid meta_layer_models for the given task')
-        base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier'] if base_layer_models == None else base_layer_models
-
-        meta_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier'] if meta_layer_models == None else meta_layer_models
+ 
 
         trained_models = []
         for base_layer_model in base_layer_models:
@@ -207,12 +211,13 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
     
     #To sort on basis of metric provided
     if sortby:
-        index = column_names.index(sortby)
+        index = column_names.index(sortby) + 1
         stats_list.sort(key= lambda x: x[index],reverse=True)
 
     #Download model
     if download_model:
         pickle_model(stats_list[0][0],download_model)       
+    
     pd_stats = pd.DataFrame(stats_list)
     pd_stats.drop(pd_stats.columns[0], axis=1,inplace=True)
     pd_stats.columns = column_names

@@ -23,15 +23,18 @@ def get_model_metrics(model,label_data,task, X_test, Y_test):
         Y_pred = model.predict(X_test)
         if task=='classification':
             stats['accuracy'] = metrics.accuracy_score(Y_test, Y_pred)
-            if number_of_classes==2:
+            if number_of_classes<=2:
                 stats['precision'] = metrics.precision_score(Y_test, Y_pred)
                 stats['recall'] = metrics.recall_score(Y_test, Y_pred)
                 stats['f1'] = metrics.f1_score(Y_test, Y_pred)
             else:
+                stats['precision'] = metrics.precision_score(Y_test, Y_pred)
                 stats['precision_micro'] = metrics.precision_score(Y_test, Y_pred, average='micro')
                 stats['precision_macro'] = metrics.precision_score(Y_test, Y_pred, average='macro')
+                stats['recall'] = metrics.recall_score(Y_test, Y_pred)
                 stats['recall_micro'] = metrics.recall_score(Y_test, Y_pred,average='micro')
                 stats['recall_macro'] = metrics.recall_score(Y_test, Y_pred,average='macro')
+                stats['f1'] = metrics.f1_score(Y_test, Y_pred)
                 stats['f1_micro'] = metrics.f1_score(Y_test, Y_pred,average='micro')
                 stats['f1_macro'] = metrics.f1_score(Y_test, Y_pred,average='macro')
         else:
@@ -63,15 +66,18 @@ def get_model_metrics_ensemble(label_data,task, Y_test, Y_pred):
         stats = {}
         if task=='classification':
             stats['accuracy'] = metrics.accuracy_score(Y_test, Y_pred)
-            if number_of_classes==2:
+            if number_of_classes<=2:
                 stats['precision'] = metrics.precision_score(Y_test, Y_pred)
                 stats['recall'] = metrics.recall_score(Y_test, Y_pred)
                 stats['f1'] = metrics.f1_score(Y_test, Y_pred)
             else:
+                stats['precision'] = metrics.precision_score(Y_test, Y_pred)
                 stats['precision_micro'] = metrics.precision_score(Y_test, Y_pred, average='micro')
                 stats['precision_macro'] = metrics.precision_score(Y_test, Y_pred, average='macro')
+                stats['recall'] = metrics.recall_score(Y_test, Y_pred)
                 stats['recall_micro'] = metrics.recall_score(Y_test, Y_pred,average='micro')
                 stats['recall_macro'] = metrics.recall_score(Y_test, Y_pred,average='macro')
+                stats['f1'] = metrics.f1_score(Y_test, Y_pred)
                 stats['f1_micro'] = metrics.f1_score(Y_test, Y_pred,average='micro')
                 stats['f1_macro'] = metrics.f1_score(Y_test, Y_pred,average='macro')
         else:

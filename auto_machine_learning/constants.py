@@ -62,6 +62,10 @@ hyperparameters = {
         'n_estimators' : [25,50,75,100]
     },
 
+    BaggingRegressor: {
+        'base_estimator' : [DecisionTreeRegressor()],
+        'n_estimators' : [25,50,75,100]
+    },
     LogisticRegression: {
         'C': [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30],
         'fit_intercept': [True, False],
@@ -105,8 +109,11 @@ hyperparameters = {
     AdaBoostClassifier: {
         'base_estimator' : [DecisionTreeClassifier()],
         'n_estimators' : [25,50,75,100]
+    },
+    BaggingClassifier: {
+        'base_estimator' : [DecisionTreeClassifier()],
+        'n_estimators' : [25,50,75,100]
     }
-
 }
 
 

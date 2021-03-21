@@ -174,14 +174,17 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
 
 
                 dataset = original_dataset.copy()
+    
+    print(stats)
     #To sort on basis of metric provided
     if sortby:
-        index = column_names.index(sortby)
+        index = column_names.index(sortby) + 1
         stats.sort(key= lambda x: x[index],reverse=True)
 
     # To download model
     if download_model:
         pickle_model(stats[0][0],download_model)
+    
     pd_stats = pd.DataFrame(stats)
     pd_stats.drop(pd_stats.columns[0], axis=1,inplace=True)
     pd_stats.columns = column_names

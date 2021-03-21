@@ -33,7 +33,7 @@ class SuperLearnerRegressor():
 
         if meta_model == None:
             self.meta_model = None
-        elif meta_model == 'AdaBoostRegressor':
+        elif meta_model in ['AdaBoostRegressor','BaggingRegressor']:
             self.meta_model = get_model(meta_model)(base_estimator=get_model('RandomForestRegressor')())
         else:
             self.meta_model = get_model(meta_model)()
@@ -235,7 +235,7 @@ class SuperLearnerClassifier():
 
         if meta_model == None:
             self.meta_model = None
-        elif meta_model == 'AdaBoostClassifier':
+        elif meta_model in ['AdaBoostClassifier','BaggingClassifier']:
             self.meta_model = get_model(meta_model)(base_estimator=get_model('RandomForestClassifier')())
         else:
             self.meta_model = get_model(meta_model)()
