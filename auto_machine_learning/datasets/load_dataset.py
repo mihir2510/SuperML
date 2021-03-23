@@ -5,10 +5,12 @@ label_map = {
     'boston': 'Target',
     'carprice': 'price',
     'diabetes': 'Outcome',
-    # 'energy': '',
+    'solar': 'Radiation',
     'heart_disease': 'class',
     'salary': 'Salary',
-    'titanic': 'Survived'
+    'titanic': 'Survived',
+    'rain_australia':'RainTomorrow',
+    'fitbit': 'calorie'
     #'weather': 'Apparent Temperature (C)'
 }
 

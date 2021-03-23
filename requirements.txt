@@ -11,3 +11,4 @@ plotly
 pytest
 pytest-runner
 seaborn
+six

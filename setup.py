@@ -34,6 +34,7 @@ setup(
         'pytest',
         'pytest-runner',
         'seaborn',
+        'six'
     ],
     keywords=['automl', 'data preprocessing','feature engineering','ensembling','super learner'],
     classifiers=[
