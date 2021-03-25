@@ -10,7 +10,7 @@ with open("README.md", "r") as fh:
 # Setting up
 setup(
     name="auto-machine-learning",
-    version='0.0.3',
+    version='0.0.5',
     license='MIT',
     author="Mihir Gada, Zenil Haria, Arnav Mankad, Kaustubh Damania",
     author_email="",
@@ -34,7 +34,6 @@ setup(
         'pytest',
         'pytest-runner',
         'seaborn',
-        'six'
     ],
     keywords=['automl', 'data preprocessing','feature engineering','ensembling','super learner'],
     classifiers=[
@@ -47,5 +46,6 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
-  ]
+  ],
+  include_package_data=True
 )
