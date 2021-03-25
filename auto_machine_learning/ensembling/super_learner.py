@@ -26,8 +26,8 @@ class SuperLearnerRegressor():
                         
         '''
         if base_layer_models == None:
-            # base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'ExtraTreesRegressor', 'AdaBoostRegressor','GradientBoostingRegressor']
-            base_layer_models = ['LinearRegression', 'Ridge', 'Lasso']
+            base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'ExtraTreesRegressor', 'AdaBoostRegressor','GradientBoostingRegressor']
+            #base_layer_models = ['LinearRegression', 'Ridge', 'Lasso']
 
         self.models = [get_model(model) for model in base_layer_models]
 
@@ -228,8 +228,8 @@ class SuperLearnerClassifier():
                         
         '''
         if base_layer_models == None:
-            #base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'GradientBoostingClassifier','ExtraTreesClassifier','AdaBoostClassifier']
-            base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier']
+            base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'GradientBoostingClassifier','ExtraTreesClassifier','AdaBoostClassifier']
+            #base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier']
 
         self.models = [get_model(model) for model in base_layer_models]
 

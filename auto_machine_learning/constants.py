@@ -43,7 +43,7 @@ hyperparameters = {
     },
 
     ExtraTreesRegressor: {
-        'n_estimators': [20, 40, 60, 80, 100],
+        'n_estimators': [5,10,15,20,25],
         'criterion': ['mse', 'mae',],
         'max_features': ['auto', 'sqrt', 'log2'],
         'bootstrap': [True, False],
@@ -51,7 +51,7 @@ hyperparameters = {
     },
 
     GradientBoostingRegressor: {
-        'n_estimators' : [20,40,60,80,100],
+        'n_estimators' : [5,10,15,20,25],
         'criterion' : ['friedman_mse', 'mse', 'mae'],
         'max_features' : ['auto', 'sqrt', 'log2'],
         'ccp_alpha': [0, 0.01, 0.1, 1]
@@ -59,12 +59,12 @@ hyperparameters = {
 
     AdaBoostRegressor: {
         'base_estimator' : [DecisionTreeRegressor()],
-        'n_estimators' : [25,50,75,100]
+        'n_estimators' : [5,10,15,20,25]
     },
 
     BaggingRegressor: {
         'base_estimator' : [DecisionTreeRegressor()],
-        'n_estimators' : [25,50,75,100]
+        'n_estimators' : [5,10,15,20,25]
     },
     LogisticRegression: {
         'C': [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30],
@@ -92,7 +92,7 @@ hyperparameters = {
     },
 
     ExtraTreesClassifier: {
-        'n_estimators': [20, 40, 60, 80, 100],
+        'n_estimators': [5,10,15,20,25],
         'criterion': ['gini', 'entropy'],
         'max_features': ['auto', 'sqrt', 'log2'],
         'bootstrap': [True, False],
@@ -100,7 +100,7 @@ hyperparameters = {
         'ccp_alpha': [0, 0.01, 0.1, 1]
     },
     GradientBoostingClassifier: {
-        'n_estimators' : [20, 40, 60, 80, 100],
+        'n_estimators' : [5,10,15,20,25],
         'criterion' : ['friedman_mse', 'mse', 'mae'],
         'max_features' : ['auto', 'sqrt', 'log2'],
         'ccp_alpha': [0, 0.01, 0.1, 1]
@@ -108,11 +108,11 @@ hyperparameters = {
 
     AdaBoostClassifier: {
         'base_estimator' : [DecisionTreeClassifier()],
-        'n_estimators' : [25,50,75,100]
+        'n_estimators' : [5,10,15,20,25]
     },
     BaggingClassifier: {
         'base_estimator' : [DecisionTreeClassifier()],
-        'n_estimators' : [25,50,75,100]
+        'n_estimators' : [5,10,15,20,25]
     }
 }
 
