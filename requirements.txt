@@ -12,3 +12,5 @@ pytest
 pytest-runner
 seaborn
 six
+psutil
+kaleido
