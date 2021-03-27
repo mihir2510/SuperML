@@ -15,6 +15,34 @@ default_feature_engineering_methods = ['all_features','anova', 'correlation', 'p
 default_hyperparamter_methods = ['standard','grid_search', 'random_search', 'bayesian_tpe']
 models = list(map_model.keys())
 
+name_holder = {
+    'LinearRegression' : 'LiR',
+    'Ridge' : "RR",
+    'Lasso' : "LaR",
+    'DecisionTreeRegressor' : 'DTR',
+    'RandomForestRegressor' : 'RFR',
+    'AdaBoostRegressor' : 'ABR',
+    'ExtraTreesRegressor' : 'ETR',
+    'BaggingRegressor' : 'BR',
+    'GradientBoostingRegressor' : 'GBR',
+    'LogisticRegression' : 'LoR',
+    'RandomForestClassifier' : 'RFC',
+    'AdaBoostClassifier' : 'ABC',
+    'BaggingClassifier' : 'BC',
+    'GradientBoostingClassifier' : 'GBC',
+    'ExtraTreesClassifier' : 'ETC',
+    'DecisionTreeClassifier' : 'DTC',
+    'standard':'No HPO',
+    'grid_search':'GS',
+    'random_search':'RS',
+    'bayesian_tpe':'BO',
+    'all_features' : 'No FE',
+    'anova_regressor' : 'ANOVA',
+    'anova_classifier' : 'ANOVA',
+    'correlation' : 'CoRR',
+    'pca' : 'PCA',
+    'select_from_model' : 'SFM'
+}
 
 techniques_dict = {
     mod.__name__ : mod for mod in [anova_classifier, anova_regressor, correlation, pca, select_from_model, grid_search, random_search, bayesian_tpe, bayesian_gp]
@@ -170,7 +198,8 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
                     column_names = ['Estimator', 'Feature Engineering Method', 'Hyperparameter Optimization Method']
                     column_names.extend(list(model_metrics.keys()))
                     model_metrics = list(map(lambda value : round(value, 4), model_metrics.values()))
-                    stats.append([model,model_name,feature_engineering_method,hpo_method]+list(model_metrics))
+                    #change names
+                    stats.append([model,name_holder[model_name],name_holder[feature_engineering_method],name_holder[hpo_method]]+list(model_metrics))
 
 
                 dataset = original_dataset.copy()

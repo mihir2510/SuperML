@@ -7,6 +7,39 @@ from auto_machine_learning.hyperparameter_optimization.hpo import get_trained_mo
 import pandas as pd
 import sklearn
 
+
+
+
+name_holder = {
+    'LinearRegression' : 'LiR',
+    'Ridge' : "RR",
+    'Lasso' : "LaR",
+    'DecisionTreeRegressor' : 'DTR',
+    'RandomForestRegressor' : 'RFR',
+    'AdaBoostRegressor' : 'ABR',
+    'ExtraTreesRegressor' : 'ETR',
+    'BaggingRegressor' : 'BR',
+    'GradientBoostingRegressor' : 'GBR',
+    'LogisticRegression' : 'LoR',
+    'RandomForestClassifier' : 'RFC',
+    'AdaBoostClassifier' : 'ABC',
+    'BaggingClassifier' : 'BC',
+    'GradientBoostingClassifier' : 'GBC',
+    'ExtraTreesClassifier' : 'ETC',
+    'DecisionTreeClassifier' : 'DTC',
+    'standard':'No HPO',
+    'grid_search':'GS',
+    'random_search':'RS',
+    'bayesian_tpe':'BO',
+    'all_features' : 'No FE',
+    'anova_regressor' : 'ANOVA',
+    'anova_classifier' : 'ANOVA',
+    'correlation' : 'CoRR',
+    'pca' : 'PCA',
+    'select_from_model' : 'SFM'
+}
+
+
 def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model=None, n_splits=5, optimize=True, max_evals=100, download_model = None):   
     '''
         Implements Automated Ensembling based on the base layer and meta layer models provided.
@@ -158,8 +191,8 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
                 ensemble.fit_meta_model(ensemble.meta_model)
 
                 stats = get_model_metrics(ensemble, feature_engineered_dataset[label], task, X_test, Y_test)
-                temp = [ensemble, meta_layer_model]
-                temp.append(', '.join([model.__name__ for model in ensemble.models]))
+                temp = [ensemble, name_holder[meta_layer_model]]
+                temp.append(', '.join([name_holder[model.__name__] for model in ensemble.models]))
                 temp.extend(list(stats.values()))
                 stats_list.append(temp)
 
@@ -203,12 +236,13 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
                 ensemble.fit_meta_model(ensemble.meta_model)
 
                 stats = get_model_metrics(ensemble, feature_engineered_dataset[label], task, X_test, Y_test)
-                temp = [ensemble, meta_layer_model]
-                temp.append(', '.join([model.__name__ for model in ensemble.models]))
+                temp = [ensemble, name_holder[meta_layer_model]]
+                temp.append(', '.join([name_holder[model.__name__] for model in ensemble.models]))
+                stats = list(map(lambda value : round(value, 4), stats.values()))
                 temp.extend(list(stats.values()))
                 stats_list.append(temp)
     print('\nEnsemble trained\n')
-    
+    print(stats_list)
     #To sort on basis of metric provided
     if sortby:
         index = column_names.index(sortby) + 1
