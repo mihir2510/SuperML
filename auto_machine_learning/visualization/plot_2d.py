@@ -3,14 +3,14 @@ import pandas as pd
 from plotly.subplots import make_subplots
 
 
-def bar_2d(stats, Y, X, groups,file_name='index.html',download_png=None):
+def bar_2d(stats, Y, X, groups,file_name='index.html',download_png=None,height=None,width=None):
 
         # X='Estimator'
         # groups=['Feature Engineering Method','Hyperparameter Optimisation Method']
 
 
     x_axis_data = list(pd.unique(stats[X]))
-    stats['concatenated'] = stats[groups].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
+    stats['concatenated'] = stats[groups].apply(lambda row: ', '.join(row.values.astype(str)), axis=1)
     y_axis_data={}
 
     for index, row in stats.iterrows():
@@ -26,7 +26,7 @@ def bar_2d(stats, Y, X, groups,file_name='index.html',download_png=None):
     fig = go.Figure(data=bar)
     
     # Change the bar mode
-    fig.update_layout(title='Bar Plot',barmode='group',legend_title_text = "Legend",hovermode="closest") #showlegend=False,
+    fig.update_layout(title='Bar Plot',barmode='group',legend_title_text = "Legend",hovermode="closest",height=height, width=width) #showlegend=False,
     fig.update_xaxes(title_text=X)
 
     fig.update_yaxes(title_text=Y,range=(stats[Y].min()-0.05, stats[Y].max()+0.05))
@@ -39,13 +39,13 @@ def bar_2d(stats, Y, X, groups,file_name='index.html',download_png=None):
     fig.write_html(file_name)
 
 
-def bar_2dsubplot(stats, Y, plots,file_name='index.html',download_png=None):
+def bar_2dsubplot(stats, Y, plots,file_name='index.html',download_png=None,height=None, width=None):
     
     #plots=['Estimator','Feature Engineering Method','Hyperparameter Optimisation Method']
     
     set_of_plot=set(plots)
     print(set_of_plot)
-    fig = make_subplots(rows=3, cols=1, row_heights=[1,1,1],subplot_titles=("First Subplot","Second Subplot", "Third Subplot"))
+    fig = make_subplots(rows=3, cols=1, row_heights=[1,1,1],subplot_titles=plots)
         
     for _plot in range(len(plots)):
         print(_plot)
@@ -75,7 +75,7 @@ def bar_2dsubplot(stats, Y, plots,file_name='index.html',download_png=None):
 
     
     # Change the bar mode
-    fig.update_layout(title='Bar Plot',barmode='group',legend_title_text = "Legend",height=1000, width=1500,hovermode="closest")
+    fig.update_layout(title='Bar Plot',barmode='group',legend_title_text = "Legend",height=height, width=width,hovermode="closest")
     for _plot in range(len(plots)):
         fig.update_xaxes(title_text=plots[_plot],row=_plot+1,col=1)
         fig.update_yaxes(title_text=Y,range=(stats[Y].min()-0.05, stats[Y].max()+0.05),row=_plot+1,col=1)

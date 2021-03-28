@@ -18,7 +18,7 @@ models = list(map_model.keys())
 # models = ['LogisticRegression', 'RandomForestClassifier']
 #models = ['BaggingRegressor']
 #dataset = pd.read_csv('http://54.196.8.61:3000/uploads/titanic/Boston.csv')
-dataset,label = load_dataset('boston')
+dataset,label = load_dataset('diabetes')
 print('dataset downloaded')
 # dataset.drop(['Unnamed: 0'],axis=1,inplace=True)
 # dataset = anova_regressor(dataset, label, LinearRegression)
@@ -29,7 +29,9 @@ print('dataset downloaded')
 # base_model.fit(X_train, Y_train)
 # print('Accuracy for base model:',base_model.score(dataset[get_features(dataset,label)], dataset[label]))
 
-stats,model =automl_run(dataset, label,base_layer_models=['Lasso','Ridge'], meta_layer_models=['LinearRegression'], task='prediction',excel_file='1',sortby='r2')
+#stats,model =automl_run(dataset, label,base_layer_models=['Lasso','Ridge'], meta_layer_models=['LinearRegression'], task='prediction',excel_file='1',sortby='r2')
+
+stats,model =automl_run(dataset, label,base_layer_models=['LogisticRegression'], meta_layer_models=['LogisticRegression'], task='classification',excel_file='1',sortby='accuracy')
 
 #stats,model= auto_trainer(dataset,label,task='prediction',feature_engineering_methods= ['all_features','anova'], hpo_methods=['standard','bayesian_tpe'], models=['LinearRegression','Lasso'] ,anova_estimator=None, sortby='r2',excel_file='1')
 

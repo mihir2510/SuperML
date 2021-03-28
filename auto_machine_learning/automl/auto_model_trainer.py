@@ -16,32 +16,53 @@ default_hyperparamter_methods = ['standard','grid_search', 'random_search', 'bay
 models = list(map_model.keys())
 
 name_holder = {
-    'LinearRegression' : 'LiR',
-    'Ridge' : "RR",
-    'Lasso' : "LaR",
-    'DecisionTreeRegressor' : 'DTR',
-    'RandomForestRegressor' : 'RFR',
-    'AdaBoostRegressor' : 'ABR',
-    'ExtraTreesRegressor' : 'ETR',
-    'BaggingRegressor' : 'BR',
-    'GradientBoostingRegressor' : 'GBR',
-    'LogisticRegression' : 'LoR',
-    'RandomForestClassifier' : 'RFC',
-    'AdaBoostClassifier' : 'ABC',
-    'BaggingClassifier' : 'BC',
-    'GradientBoostingClassifier' : 'GBC',
-    'ExtraTreesClassifier' : 'ETC',
-    'DecisionTreeClassifier' : 'DTC',
+    'LinearRegression' : 'Linear Regression',
+    'Ridge' : "Ridge Regression",
+    'Lasso' : "Lasso Regression",
+    'DecisionTreeRegressor' : 'Decision Tree Regressor',
+    'RandomForestRegressor' : 'Random Forest Regressor',
+    'AdaBoostRegressor' : 'AdaBoost Regressor',
+    'ExtraTreesRegressor' : 'Extra Trees Regressor',
+    'BaggingRegressor' : 'Bagging Regressor',
+    'GradientBoostingRegressor' : 'Gradient Boosting Regressor',
+    'LogisticRegression' : 'Logistic Regression',
+    'RandomForestClassifier' : 'Random Forest Classifier',
+    'AdaBoostClassifier' : 'AdaBoost Classifier',
+    'BaggingClassifier' : 'Bagging Classifier',
+    'GradientBoostingClassifier' : 'Gradient Boosting Classifier',
+    'ExtraTreesClassifier' : 'Extra Trees Classifier',
+    'DecisionTreeClassifier' : 'Decision Tree Classifier',
     'standard':'No HPO',
-    'grid_search':'GS',
-    'random_search':'RS',
-    'bayesian_tpe':'BO',
-    'all_features' : 'No FE',
+    'grid_search':'Grid Search',
+    'random_search':'Random Search',
+    'bayesian_tpe':'Bayesian Optimization',
+    'all_features' : 'No Feature Engineering',
     'anova_regressor' : 'ANOVA',
     'anova_classifier' : 'ANOVA',
-    'correlation' : 'CoRR',
-    'pca' : 'PCA',
-    'select_from_model' : 'SFM'
+    'correlation' : 'Correlation Method',
+    'pca' : 'Pricipal Component Analysis',
+    'select_from_model' : 'Select From Model'
+}
+
+column_holder={
+    'Meta Layer Model':'Meta Layer Model',
+    'Base Layer Models':'Base Layer Models',
+    'r2':'R2 Score',
+    'rmse':'RMSE',
+    'mae':'MAE',
+    'accuracy':'Accuracy',
+    'precision':'Precsion',
+    'precision_micro':'Precsion Micro',
+    'precision_macro':'Precison Macro',
+    'recall':'Recall',
+    'recall_micro':'Recall Micro',
+    'recall_macro':'Recall Macro',
+    'f1':'F1 Score',
+    'f1_micro':'F1 Score Micro',
+    'f1_macro':'F1 Score Macro',
+    'Estimator':'Estimator',
+    'Feature Engineering Method':'Feature Engineering Method',
+    'Hyperparameter Optimization Method':'Hyperparameter Optimization Method'
 }
 
 techniques_dict = {
@@ -216,6 +237,9 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
     
     pd_stats = pd.DataFrame(stats)
     pd_stats.drop(pd_stats.columns[0], axis=1,inplace=True)
+
+    for change_column in range(len(column_names)):
+        column_names[change_column]=column_holder[column_names[change_column]]
     pd_stats.columns = column_names
 
     #Download excelsheet

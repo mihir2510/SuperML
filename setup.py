@@ -10,7 +10,7 @@ with open("README.md", "r") as fh:
 # Setting up
 setup(
     name="auto-machine-learning",
-    version='0.0.7',
+    version='0.0.8',
     license='MIT',
     author="Mihir Gada, Zenil Haria, Arnav Mankad, Kaustubh Damania",
     author_email="",
