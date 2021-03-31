@@ -91,7 +91,8 @@ def train(dataset, label, task, feature_engineering_method='all_features', hpo_m
             Returns:
                     model (mode object): trained model
     '''
-
+    if dataset.shape[0]>30000 or dataset.shape[1]>30:
+        max_evals=100
     # Preprocessing
     dataset = preprocess_data(dataset, label, task)
 
@@ -152,6 +153,8 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
 
     '''
 
+    if dataset.shape[0]>30000 or dataset.shape[1]>30:
+        max_evals=100
     # dataset = preprocess_data(dataset,label)
     stats = []
     if task=='prediction':

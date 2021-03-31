@@ -3,10 +3,10 @@ import pandas as pd
 import numpy as np
 
 
-def surface_3d(stats, Z,  X='Estimator', Y=['Feature Engineering Method', 'Hyperparameter Optimisation Method'],file_name='index.html',width=None, height=None):
+def surface_3d(stats, Z,  X, Y,file_name='index.html',width=None, height=None):
 
     x_axis_data = list(pd.unique(stats[X]))
-    stats['concatenated'] = stats[Y].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
+    stats['concatenated'] = stats[Y].apply(lambda row: ', '.join(row.values.astype(str)), axis=1)
     y_axis = list(pd.unique(stats['concatenated']))
 
     y_axis_data = {}
@@ -30,7 +30,7 @@ def surface_3d(stats, Z,  X='Estimator', Y=['Feature Engineering Method', 'Hyper
                          gridcolor="white",
                          showbackground=True,
                          zerolinecolor="white",
-                         title='.<br><br><br><br><br><br>'+str(X),
+                         title='.<br><br><br>'+str(X),
                          ticks='outside',
                          ticklen=60,
                          tickcolor='white',),
@@ -39,7 +39,7 @@ def surface_3d(stats, Z,  X='Estimator', Y=['Feature Engineering Method', 'Hyper
                         gridcolor="white",
                         showbackground=True,
                         zerolinecolor="white",
-                        title='.<br><br><br><br><br><br>'+ ' +'.join(Y),
+                        title='.<br><br><br>'+ ' +'.join(Y),
                         ticks='outside',
                         ticklen=60,
                         tickcolor='white',),
@@ -48,7 +48,7 @@ def surface_3d(stats, Z,  X='Estimator', Y=['Feature Engineering Method', 'Hyper
                         gridcolor="white",
                         showbackground=True,
                         zerolinecolor="white",
-                        title='.<br><br><br><br><br><br>'+Z),))
+                        title='.<br><br><br>'+Z),))
 
     
     #fig.show()

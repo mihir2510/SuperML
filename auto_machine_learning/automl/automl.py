@@ -76,7 +76,9 @@ def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model
             Returns:     
                     ensemble(model object) : trained super learner model   
     '''
-
+    if dataset.shape[0]>30000 or dataset.shape[1]>30:
+        max_evals=100
+        
     # Data Preprocessing
     prepocessed_dataset = preprocess_data(dataset, label, task)
     print('\nData Preprocessed.\n')
@@ -153,6 +155,9 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
     '''
 
     # Data Preprocessing
+    if dataset.shape[0]>30000 or dataset.shape[1]>30:
+        max_evals=100
+        
     prepocessed_dataset = preprocess_data(dataset, label, task)
 
     print('\nData Preprocessed.\n')

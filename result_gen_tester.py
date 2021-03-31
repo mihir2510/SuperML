@@ -18,7 +18,7 @@ models = list(map_model.keys())
 # models = ['LogisticRegression', 'RandomForestClassifier']
 #models = ['BaggingRegressor']
 #dataset = pd.read_csv('http://54.196.8.61:3000/uploads/titanic/Boston.csv')
-dataset,label = load_dataset('diabetes')
+dataset,label = load_dataset('solar')
 print('dataset downloaded')
 # dataset.drop(['Unnamed: 0'],axis=1,inplace=True)
 # dataset = anova_regressor(dataset, label, LinearRegression)

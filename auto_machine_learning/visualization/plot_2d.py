@@ -48,14 +48,14 @@ def bar_2dsubplot(stats, Y, plots,file_name='index.html',download_png=None,heigh
     fig = make_subplots(rows=3, cols=1, row_heights=[1,1,1],subplot_titles=plots)
         
     for _plot in range(len(plots)):
-        print(_plot)
+        
         X=plots[_plot]
-        print(X)
+        
         groups=set_of_plot.difference(set([X]))
         #groups=set(X).difference(set_of_plot)
-        print(groups)
+        
         x_axis_data = list(pd.unique(stats[X]))
-        stats['concatenated'] = stats[groups].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
+        stats['concatenated'] = stats[groups].apply(lambda row: ', '.join(row.values.astype(str)), axis=1)
         y_axis_data={}
 
         for index, row in stats.iterrows():
