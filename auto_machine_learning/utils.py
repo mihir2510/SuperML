@@ -47,7 +47,7 @@ def get_model(name):
     try:
         return map_model.get(name)
     except Exception as e:
-        raise type(e)("Checl the model name")
+        raise type(e)("Check the model name")
 
 #---------------------------------------------------------------------------------------------------------------------#
 
@@ -61,13 +61,14 @@ def pickle_model(model,file_name='pickled_model'):
 
            
     '''
+    
     pickle.dump(model, open(file_name+'.sav', 'wb'))
-
+    print('\n'+'Model Downloaded')
 #---------------------------------------------------------------------------------------------------------------------#
 
 def get_csv(pd_stats,filename='excel_file'):
     pd_stats.to_excel(filename+'.xlsx')
-    print('Stats generated!')
+    print('\n'+'Excel File Generated')
 
 #---------------------------------------------------------------------------------------------------------------------#
 

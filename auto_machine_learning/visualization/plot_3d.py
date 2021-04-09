@@ -20,7 +20,7 @@ def surface_3d(stats, Z,  X, Y,file_name='index',width=None, height=None):
 
 
     '''
-
+    
     x_axis_data = list(pd.unique(stats[X]))
     stats['concatenated'] = stats[Y].apply(lambda row: ', '.join(row.values.astype(str)), axis=1)
     y_axis = list(pd.unique(stats['concatenated']))
@@ -65,13 +65,7 @@ def surface_3d(stats, Z,  X, Y,file_name='index',width=None, height=None):
                         showbackground=True,
                         zerolinecolor="white",
                         title='.<br><br><br>'+Z),))
-
     
     #fig.show()
-
     fig.write_html(file_name+'.html')
-
-'''
-    with open('index.html', 'w') as f:
-        f.write(fig.to_html(full_html=False, include_plotlyjs='https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly.min.js'))
-'''
+    print('HTML File Created')

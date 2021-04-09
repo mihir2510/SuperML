@@ -28,6 +28,7 @@ def grid_search(model, X_train, Y_train):
     except Exception as e:
         raise type(e)("Error at grid_search. Check data and model")
 
+    
     return optimized_model
 
 #---------------------------------------------------------------------------------------------------------------------#
@@ -54,6 +55,7 @@ def random_search(model, X_train, Y_train):
     except Exception as e:
         raise type(e)("Error at random_search. Check data and model")
 
+    
     return optimized_model
 
 #---------------------------------------------------------------------------------------------------------------------#
@@ -80,6 +82,7 @@ def bayesian_gp(model, X_train, Y_train):
     except Exception as e:
         raise type(e)("Error at bayesian_gp. Check data and model")
 
+    
     return optimized_model 
 
 #---------------------------------------------------------------------------------------------------------------------#
@@ -130,5 +133,6 @@ def bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=100):
     except Exception as e:
         raise type(e)("Error at bayesian_tpe. Check data and model")
 
+    
     return optimized_model
 #---------------------------------------------------------------------------------------------------------------------#

@@ -28,16 +28,22 @@ def get_trained_model(dataset, label, model_name, task, method_name='standard', 
     if method_name=='standard':
         model=model()
         trained_model = model.fit(X_train,Y_train)
+        print('Standard Model without HPO')
+        print('Model Trained')
+        return trained_model
     elif method_name == 'grid_search':
         trained_model = grid_search(model, X_train, Y_train)
     elif method_name == 'random_search':
         trained_model = random_search(model, X_train, Y_train)
-    elif method_name == 'bayesian_gp':
-        trained_model = bayesian_gp(model, X_train, Y_train)
+    # elif method_name == 'bayesian_gp':
+    #     trained_model = bayesian_gp(model, X_train, Y_train)
     elif method_name == 'bayesian_tpe':
         trained_model = bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=max_evals)
     else:
         raise Exception("'No hpo method named {}'.format(method_name)")
+    
+    print('Hyperparameters Optimized')
+    print('Model Trained')
     return trained_model
 
 #---------------------------------------------------------------------------------------------------------------------#

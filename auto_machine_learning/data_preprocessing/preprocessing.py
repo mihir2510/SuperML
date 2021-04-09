@@ -37,9 +37,8 @@ def preprocess_data(dataset, label, task='classification'):
 
     correlation_matrix(dataset,label)
 
-    # return oversampling(label_encode(remove_null(dataset,label),label),label)
+    print('Data Preprocessing Complete')
     return dataset
-    
 
 #---------------------------------------------------------------------------------------------------------------------#
 
@@ -152,7 +151,6 @@ def dataset_split(dataset, label, test_size=0.3, random_state = 1):
             Returns:
                     dataset(dataframe) : processed data to be used for training model
     '''
-    
     #get features
     features = get_features(dataset, label)
 
@@ -183,12 +181,13 @@ def correlation_matrix(dataset, label):
     try:
         correlation = dataset[features].corr().abs()
         f, ax = plt.subplots(figsize=(20,20))
-        sns.heatmap(correlation, cmap='coolwarm', annot=True, ax=ax)
+        sns.heatmap(correlation,linecolor='black',linewidths=2, annot=True, ax=ax)
     except Exception as e:
         print(e+' '+"Please check the data and label")
     
     #plot the correlation matrix
     #plt.show()
+    print('Correlation Matrix Saved')
     plt.savefig('correlation_matrix.png')
 
 #---------------------------------------------------------------------------------------------------------------------#

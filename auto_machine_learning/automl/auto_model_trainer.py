@@ -70,7 +70,7 @@ techniques_dict = {
 }
 
 
-def train(dataset, label, task, feature_engineering_method='all_features', hpo_method='standard', model_name=None, threshold=0.9, max_evals=500, test_size=0.3, random_state=1, download_model=None):
+def train(dataset, label, task,model_name, feature_engineering_method='all_features', hpo_method='standard', threshold=0.9, max_evals=500, test_size=0.3, random_state=1, download_model=None):
     '''
     Implements a pipeline for training the machine learning model. Consists of the stages: Datapreprocessing -> Feature Engineering -> training -> Hpo.
 
@@ -91,38 +91,53 @@ def train(dataset, label, task, feature_engineering_method='all_features', hpo_m
             Returns:
                     model (mode object): trained model
     '''
+    #HPO contraints for time
     if dataset.shape[0]>30000 or dataset.shape[1]>30:
         max_evals=100
+
     # Preprocessing
     dataset = preprocess_data(dataset, label, task)
 
     # Feature Engineering
     if feature_engineering_method == 'all_features':
+        print('All Features Considered')
         pass
     elif feature_engineering_method == 'anova':
         if task == 'prediction':
             dataset = anova_regressor(dataset, label)
         else:
             dataset = anova_classifier(dataset, label)
+        print('ANOVA Complete')
     elif feature_engineering_method == 'correlation':
         dataset = correlation(dataset, label, threshold)
+        print('Correlation Method Complete')
     elif feature_engineering_method == 'pca':
         dataset = pca(dataset, label)
+        print('PCA Complete')
     elif feature_engineering_method == 'select_from_model':
         if task == 'prediction':
             dataset = select_from_model(dataset, label, RandomForestRegressor)
         else:
             dataset = select_from_model(dataset, label, RandomForestClassifier)
+        print('Select From Model Complete')
     print('Feature Engineering Complete')
 
     # Hyperparameter optimisation and training the model
     trained_model = get_trained_model(dataset, label, model_name, task, hpo_method, max_evals, test_size, random_state)
-    print('Model trained')
+
+
+    features = get_features(dataset, label)
+    X, Y = dataset[features], dataset[label]
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size,random_state=random_state)
+    stats=get_model_metrics(trained_model,label,task,X_test,Y_test)
+    print(stats)
 
     #download model
     if download_model:
         pickle_model(trained_model, download_model)
-        print('Pickle file generated.')
+        print('Pickle File Generated')
+
+    print('Trained Model Returned')
     return trained_model
 
 #---------------------------------------------------------------------------------------------------------------------#
@@ -155,18 +170,18 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
 
     if dataset.shape[0]>30000 or dataset.shape[1]>30:
         max_evals=100
+
     # dataset = preprocess_data(dataset,label)
     stats = []
     if task=='prediction':
         if models == []:
             models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor', 'BaggingRegressor', 'GradientBoostingRegressor']
         notallowed=['LogisticRegression','RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier', 'ExtraTreesClassifier', 'DecisionTreeClassifier']
-        print(task)
-        print(models)
+        #print(task)
+        #print(models)
         for model in models:
             if model in notallowed:
                 raise Exception("Input valid model list for the given task")
-
     else:
         if models == []:
             models = ['LogisticRegression','RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier', 'ExtraTreesClassifier', 'DecisionTreeClassifier']
@@ -175,9 +190,7 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
             if model in notallowed:
                 raise Exception("Input valid model list for the given task")
     try:
-        dataset = remove_null(dataset,label) #Change to cumulated function
-        dataset = label_encode(dataset,label)
-        correlation_matrix(dataset,label)
+        dataset = preprocess_data(dataset, label, task)
     except Exception as e:
         raise type(e)("Please check the data and the label given exists in the dataset")
 
@@ -190,22 +203,27 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
             if hpo_method == 'standard':
                 hpo_method='standard'
             for model_name in models:
-                print(feature_engineering_method, hpo_method, model_name)
+                print('\nCurrent Combination : ' + ' ' +name_holder[feature_engineering_method]+', '+ name_holder[hpo_method]+', '+name_holder[model_name])
                 if task != 'prediction' and feature_engineering_method != 'pca':
                     try:
                         dataset = oversampling(dataset,label)
+                        print('PCA Complete')
                     except Exception as e:
-                        raise type(e)("Please check the data and label given properly")
+                        raise type(e)("Please check the data and label given properly")       
                 if feature_engineering_method.startswith('anova') and anova_estimator:
                     try:
                         dataset = techniques_dict[feature_engineering_method](dataset, label, anova_estimator)
+                        print('ANOVA Complete')
                     except Exception as e:
                         raise type(e)("Please check the data, label and the anova_estimator provided properly")
                 elif feature_engineering_method == 'correlation':
                     dataset = techniques_dict[feature_engineering_method](dataset, label, threshold)
+                    print('Correlation Method Complete')
                 elif feature_engineering_method == 'select_from_model':
                     dataset = techniques_dict[feature_engineering_method](dataset, label, map_model[model_name])
+                    print('Select From Model Complete')
                 elif feature_engineering_method == 'all_features':
+                    print('All Features Considered')
                     pass
                 else:
                     dataset = techniques_dict[feature_engineering_method](dataset, label)
@@ -225,10 +243,9 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
                     #change names
                     stats.append([model,name_holder[model_name],name_holder[feature_engineering_method],name_holder[hpo_method]]+list(model_metrics))
 
-
                 dataset = original_dataset.copy()
     
-    print(stats)
+    #print(stats)
     #To sort on basis of metric provided
     if sortby:
         index = column_names.index(sortby) + 1
@@ -245,9 +262,13 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
         column_names[change_column]=column_holder[column_names[change_column]]
     pd_stats.columns = column_names
 
+    print()
+    print(pd_stats)
+
     #Download excelsheet
     if excel_file:
         get_csv(pd_stats,excel_file)
 
     #Return statistics in form of dataframe and model
+    print('Statistics and Topmost Model Returned')
     return pd_stats,stats[0][0]

@@ -33,4 +33,5 @@ def load_dataset(name):
         raise type(e)("Error at load_dataset. Please check the name of the dataaset")
 
     #Return Dataset and Label
+    print('Dataset Downloaded')
     return dataset, label_map[name]

@@ -5,7 +5,7 @@ from plotly.subplots import make_subplots
 
 def bar_2d(stats, Y, X, groups,file_name='index',download_png=None,height=None,width=None):
     '''
-    Plots the data given as input and saves it as an HTML file
+    Plots the data given as input and saves it as an PNG and HTML files
 
             Parameters:
                     stats (pandas dataframe) : Data to be plotted
@@ -47,13 +47,15 @@ def bar_2d(stats, Y, X, groups,file_name='index',download_png=None,height=None,w
     #fig.show()
     if download_png:
         fig.write_image(download_png+".png")
+        print('PNG File Generated')
 
     fig.write_html(file_name+".html")
+    print('HTML File Created')
 
 
-def bar_2dsubplot(stats, Y, plots,file_name='index.html',download_png=None,height=None, width=None):
+def bar_2dsubplot(stats, Y, plots,file_name='index',download_png=None,height=None width=None):
     '''
-    Plots the data given as input and saves it as an HTML file
+    Plots the data given as input and saves it as an PNG and HTML files
 
             Parameters:
                     stats (pandas dataframe) : Data to be plotted
@@ -68,7 +70,7 @@ def bar_2dsubplot(stats, Y, plots,file_name='index.html',download_png=None,heigh
     '''
     
     set_of_plot=set(plots)
-    print(set_of_plot)
+    #print(set_of_plot)
     fig = make_subplots(rows=3, cols=1, row_heights=[1,1,1],subplot_titles=plots)
         
     for _plot in range(len(plots)):
@@ -108,5 +110,7 @@ def bar_2dsubplot(stats, Y, plots,file_name='index.html',download_png=None,heigh
     #fig.show()
     if download_png:
         fig.write_image(download_png+".png")
+        print('PNG File Generated')
 
     fig.write_html(file_name+'.html')
+    print('HTML File Created')

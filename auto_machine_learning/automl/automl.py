@@ -160,8 +160,6 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
         
     prepocessed_dataset = preprocess_data(dataset, label, task)
 
-    print('\nData Preprocessed.\n')
-
     # Feature Engineering
     features = get_features(prepocessed_dataset, label)
     if (len(features) > 15):
@@ -193,11 +191,14 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
                 raise Exception('Invalid meta_layer_models for the given task')
    
         trained_models = []
+        print('Base Layer Models Training Started')
         for base_layer_model in base_layer_models:
+            print('\nCurrent Model : '+ name_holder[base_layer_model])
             trained_model = get_trained_model(feature_engineered_dataset, label, base_layer_model, task, 'bayesian_tpe')
             Y_pred = trained_model.predict(X_test)
             stats = get_model_metrics_ensemble(feature_engineered_dataset[label], task, Y_test, Y_pred)
             trained_models.append([trained_model, stats[metric]])
+            
         
         trained_models.sort(key=lambda x : x[1], reverse=True)
         column_names = ['Meta Layer Model', 'Base Layer Models']+list(stats.keys())
@@ -239,7 +240,9 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
  
 
         trained_models = []
+        print('Base Layer Models Training Started')
         for base_layer_model in base_layer_models:
+            print('\nCurrent Model : '+ name_holder[base_layer_model])
             trained_model = get_trained_model(feature_engineered_dataset, label, base_layer_model, task, 'bayesian_tpe')
             Y_pred = trained_model.predict(X_test)
             stats = get_model_metrics_ensemble(feature_engineered_dataset[label], task, Y_test, Y_pred)
@@ -271,7 +274,7 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
                 stats_list.append(temp)
     
     print('\nEnsemble trained\n')
-    print(stats_list)
+    #print(stats_list)
 
     #To sort on basis of metric provided
     if sortby:
@@ -289,9 +292,13 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
         column_names[change_column]=column_holder[column_names[change_column]]
     pd_stats.columns = column_names
     
+    
+    print(pd_stats)
+    
     #Download Excel File
     if excel_file:
         get_csv(pd_stats,excel_file)
 
     #Return statistics in form of dataframe and model
+    print('Statistics and Topmost Model Returned')
     return pd_stats,stats_list[0][0]
