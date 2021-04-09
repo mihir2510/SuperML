@@ -3,10 +3,22 @@ import pandas as pd
 from plotly.subplots import make_subplots
 
 
-def bar_2d(stats, Y, X, groups,file_name='index.html',download_png=None,height=None,width=None):
+def bar_2d(stats, Y, X, groups,file_name='index',download_png=None,height=None,width=None):
+    '''
+    Plots the data given as input and saves it as an HTML file
 
-        # X='Estimator'
-        # groups=['Feature Engineering Method','Hyperparameter Optimisation Method']
+            Parameters:
+                    stats (pandas dataframe) : Data to be plotted
+                    Y (string) : The parameter / column name of metric to be plotted on Y Axis
+                    X (string) : The parameter / column name of metric to be plotted on X Axis
+                    groups (list) : List of strings containing the column names to be grouped 
+                    file_name (string) : Name for the HTML file to be saved
+                    download_png (boolean) : Do you want an png file for the plot
+                    height (integer) : height of the plot
+                    width (integer) : width of the plot
+
+
+    '''
 
 
     x_axis_data = list(pd.unique(stats[X]))
@@ -34,14 +46,26 @@ def bar_2d(stats, Y, X, groups,file_name='index.html',download_png=None,height=N
     
     #fig.show()
     if download_png:
-        fig.write_image("fig1.png")
+        fig.write_image(download_png+".png")
 
-    fig.write_html(file_name)
+    fig.write_html(file_name+".html")
 
 
 def bar_2dsubplot(stats, Y, plots,file_name='index.html',download_png=None,height=None, width=None):
-    
-    #plots=['Estimator','Feature Engineering Method','Hyperparameter Optimisation Method']
+    '''
+    Plots the data given as input and saves it as an HTML file
+
+            Parameters:
+                    stats (pandas dataframe) : Data to be plotted
+                    Y (string) : The parameter / column name of metric to be plotted on Y Axis
+                    plots (list) : List of string denoting the columns to be used for generating subplots
+                    file_name (string) : Name for the HTML file to be saved
+                    download_png (boolean) : Do you want an png file for the plot
+                    height (integer) : height of the plot
+                    width (integer) : width of the plot
+
+
+    '''
     
     set_of_plot=set(plots)
     print(set_of_plot)
@@ -83,6 +107,6 @@ def bar_2dsubplot(stats, Y, plots,file_name='index.html',download_png=None,heigh
 
     #fig.show()
     if download_png:
-        fig.write_image("fig1.png")
+        fig.write_image(download_png+".png")
 
-    fig.write_html(file_name)
+    fig.write_html(file_name+'.html')

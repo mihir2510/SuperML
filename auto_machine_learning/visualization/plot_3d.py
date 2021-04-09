@@ -3,7 +3,23 @@ import pandas as pd
 import numpy as np
 
 
-def surface_3d(stats, Z,  X, Y,file_name='index.html',width=None, height=None):
+def surface_3d(stats, Z,  X, Y,file_name='index',width=None, height=None):
+    '''
+    Plots the data given as input and saves it as an HTML file
+
+            Parameters:
+                    stats (pandas dataframe) : Data to be plotted
+                    Z (string) : The parameter / column name of metric to be plotted on Z Axis
+                    Y (string) : The parameter / column name of metric to be plotted on Y Axis
+                    X (string) : The parameter / column name of metric to be plotted on X Axis
+                    groups (list) : List of strings containing the column names to be grouped 
+                    file_name (string) : Name for the HTML file to be saved
+                    download_png (boolean) : Do you want an png file for the plot
+                    height (integer) : height of the plot
+                    width (integer) : width of the plot
+
+
+    '''
 
     x_axis_data = list(pd.unique(stats[X]))
     stats['concatenated'] = stats[Y].apply(lambda row: ', '.join(row.values.astype(str)), axis=1)
@@ -53,7 +69,7 @@ def surface_3d(stats, Z,  X, Y,file_name='index.html',width=None, height=None):
     
     #fig.show()
 
-    fig.write_html(file_name)
+    fig.write_html(file_name+'.html')
 
 '''
     with open('index.html', 'w') as f:
