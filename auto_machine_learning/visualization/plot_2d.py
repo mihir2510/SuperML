@@ -53,7 +53,7 @@ def bar_2d(stats, Y, X, groups,file_name='index',download_png=None,height=None,w
     print('HTML File Created')
 
 
-def bar_2dsubplot(stats, Y, plots,file_name='index',download_png=None,height=None width=None):
+def bar_2dsubplot(stats, Y, plots,file_name='index',download_png=None,height=None,width=None):
     '''
     Plots the data given as input and saves it as an PNG and HTML files
 

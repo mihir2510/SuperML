@@ -9,7 +9,7 @@ import seaborn as sns
 
 #---------------------------------------------------------------------------------------------------------------------#
 
-def preprocess_data(dataset, label, task='classification'):
+def preprocess_data(dataset, label, task):
     '''
     Implements all the preprocessing steps: remove null, label encode, oversampling, data split, correlation matrix
 

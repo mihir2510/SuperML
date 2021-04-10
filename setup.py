@@ -10,12 +10,16 @@ with open("README.md", "r") as fh:
 # Setting up
 setup(
     name="auto-machine-learning",
-    version='0.0.9',
+    version='0.0.11',
     license='MIT',
     author="Mihir Gada, Zenil Haria, Arnav Mankad, Kaustubh Damania",
     author_email="",
     url = 'https://github.com/mihir2510/AutoML_library',
-    download_url ='',
+    download_url ='https://pypi.org/project/auto-machine-learning/',
+    project_urls={
+    "Documentation": "https://github.com/mihir2510/AutoML_library",
+    "Source Code": "https://github.com/mihir2510/AutoML_library",
+    },
     description='This is an python Library for AutoML which works for prediction and classification tasks.',
     long_description_content_type="text/markdown",
     long_description=long_description,

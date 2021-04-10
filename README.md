@@ -1,76 +1,48 @@
-# AutoML-library
+<div align="center">
+<h1>SUPERML</h1>
+<br>
 
-### Data Preprocessing:
-  get_features
+[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
-    Parameters
-    --------
-    - dataset : Pandas Dataframe
-    Dataset containing features *AND* labels
-    - label : String 
-    Column name of label
+<br>
 
-    Returns
-    --------
-    List of Features in String
+<p>Just enter your dataset and grab a cup of coffee while our system generates the best model for you!
 
-  remove_null
-
-    Parameters
-    --------
-    - dataset : Pandas Dataframe
-    Dataset containing features  **AND** labels
-    - label : String 
-    Column name of label
-
-    Returns
-    --------
-    Modified dataset with null values removed
-
-label_encode
-
-    Parameters
-    --------
-    - dataset : Pandas Dataframe
-    Dataset containing features **AND** labels
-    - label : String 
-    Column name of label
-
-    Returns
-    --------
-    Modified dataset with Label encoded values
-
-oversampling
-
-    Parameters
-    --------
-    - dataset : Pandas Dataframe
-    Dataset containing features AND labels
-    - label : String 
-    Column name of label
-
-    Returns
-    --------
-    Modified dataset with oversampling performed
+<br>
+<br>
+</div>
 
 
-### Feature Engineering:
-`TBD`
+## How to Install
 
-### Hyperparameter Optimization:
+```
 
-HPO
+pip install auto-machine-learning
 
-    Parameters
-    --------
-    - dataset : Pandas Dataframe
-    Dataset containing features AND labels
-    - label : String 
-    Column name of label
-    - Model name : String
-    - Method name : String ['all', 'grid', 'random', 'bayesian-gp','bayesian-tpe']
-    - Time taken?
+```
 
-    Returns
-    --------
-    Sklearn model of type `Model name`
+
+#### To contribute towards
+* [Fork](https://github.com/mihir2510/AutoML_library) this Repository.
+* Clone your Fork on a different branch:
+
+	 ```
+     git clone -b <name-of-branch> https://github.com/mihir2510/AutoML_library.git
+     ```
+     
+* After adding any feature:
+	* Goto your fork and create a pull request.
+	* We will test your modifications and merge changes.
+
+<br>
+<br>
+
+<div align="center">
+Made with :heart:   by 
+</div>
+
+<li><a href="https://github.com/zenilharia26">Zenil Haria</a>
+<li> <a href="https://github.com/mihir2510">Mihir Gada</a>
+<li><a href="https://github.com/ArnAV318">Arnav Mankad</a>
+<li><a href="https://github.com/KaustubhDamania">Kaustubh Damania</a>
+
