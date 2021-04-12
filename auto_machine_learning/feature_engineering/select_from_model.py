@@ -18,6 +18,10 @@ def select_from_model(dataset, label, select_from_model_class):
     '''
 
     try:
+        if select_from_model_class.__name__ =='BaggingRegressor':
+            select_from_model_class=map_model['RandomForestRegressor']
+        elif select_from_model_class.__name__ =='BaggingClassifier':
+            select_from_model_class=map_model['RandomForestClassifier'] 
         selector = SelectFromModel(estimator=select_from_model_class())
         X, Y = dataset[get_features(dataset, label)], dataset[[label]]
         selector.fit(X, Y)

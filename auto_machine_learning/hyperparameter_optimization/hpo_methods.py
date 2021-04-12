@@ -117,12 +117,34 @@ def bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=100):
         hyperopt_model = model(**space)
         hyperopt_model.fit(X_train, Y_train)
         Y_pred = hyperopt_model.predict(X_test)
+        loss = -r2_score(Y_test, Y_pred) if task == 'prediction' else -f1_score(Y_test, Y_pred)
+        return {'loss': loss, 'status': STATUS_OK}
 
+    def multiclass_objective_func(space):
+        '''
+        function to optimize the search
+
+                Parameters:
+                        space(dictionary): hyperparameter grid
+
+                Returns:
+                        dictionary : loss and status
+        '''
+        hyperopt_model = model(**space)
+        hyperopt_model.fit(X_train, Y_train)
+        Y_pred = hyperopt_model.predict(X_test)
         loss = -r2_score(Y_test, Y_pred) if task == 'prediction' else -accuracy_score(Y_test, Y_pred)
         return {'loss': loss, 'status': STATUS_OK}
     
     try:
-        best_hyperparameters = fmin(fn=objective_func, space=hyperopt_hyperparameters[model], algo=tpe.suggest, trials=Trials(), max_evals=max_evals)
+        
+        check_loss= pd.concat([Y_train, Y_test], ignore_index=True)
+        number_of_classes = len(pd.unique(check_loss))
+        
+        if number_of_classes>2:
+            best_hyperparameters = fmin(fn=multiclass_objective_func, space=hyperopt_hyperparameters[model], algo=tpe.suggest, trials=Trials(), max_evals=max_evals)
+        else:
+            best_hyperparameters = fmin(fn=objective_func, space=hyperopt_hyperparameters[model], algo=tpe.suggest, trials=Trials(), max_evals=max_evals)
         
         best_hyperparameters_values = {}
         for hyperparameter, index in best_hyperparameters.items():
@@ -130,6 +152,7 @@ def bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=100):
         
         optimized_model = model(**best_hyperparameters_values)
         optimized_model.fit(X_train, Y_train)
+        #print(best_hyperparameters_values)
     except Exception as e:
         raise type(e)("Error at bayesian_tpe. Check data and model")
 
