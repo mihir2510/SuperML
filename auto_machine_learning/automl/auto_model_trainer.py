@@ -62,7 +62,8 @@ column_holder={
     'f1_macro':'F1 Score Macro',
     'Estimator':'Estimator',
     'Feature Engineering Method':'Feature Engineering Method',
-    'Hyperparameter Optimization Method':'Hyperparameter Optimization Method'
+    'Hyperparameter Optimization Method':'Hyperparameter Optimization Method',
+    'Selected Features':'Selected Features'
 }
 
 techniques_dict = {
@@ -121,6 +122,7 @@ def train(dataset, label, task,model_name, feature_engineering_method='all_featu
             dataset = select_from_model(dataset, label, RandomForestClassifier)
         print('Select From Model Complete')
     print('Feature Engineering Complete')
+    print('Your New Features are:', get_features(dataset,label))
 
     # Hyperparameter optimisation and training the model
     trained_model = get_trained_model(dataset, label, model_name, task, hpo_method, max_evals, test_size, random_state)
@@ -129,7 +131,7 @@ def train(dataset, label, task,model_name, feature_engineering_method='all_featu
     features = get_features(dataset, label)
     X, Y = dataset[features], dataset[label]
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size,random_state=random_state)
-    stats=get_model_metrics(trained_model,label,task,X_test,Y_test)
+    stats=get_model_metrics(trained_model,dataset[label],task,X_test,Y_test)
     print(stats)
 
     #download model
@@ -162,9 +164,10 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
                     max_evals(int) : max number of evaluations to be done
                     test_size(float) : fraction of data to be used for testing
                     random_state(int) : random state to follow
-            Returns:
-                    stats (dictionary): contains the metrics for given data
+            Returns: 
                     model (mode object): trained model
+                    stats (dictionary): contains the metrics for given data
+                    final features : List of the final features used for training
 
     '''
 
@@ -189,8 +192,9 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
         for model in models:
             if model in notallowed:
                 raise Exception("Input valid model list for the given task")
+    
     try:
-        dataset = preprocess_data(dataset, label, task)
+        dataset = preprocess_data(dataset, label,task)
     except Exception as e:
         raise type(e)("Please check the data and the label given exists in the dataset")
 
@@ -203,13 +207,7 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
             if hpo_method == 'standard':
                 hpo_method='standard'
             for model_name in models:
-                print('\nCurrent Combination : ' + ' ' +name_holder[feature_engineering_method]+', '+ name_holder[hpo_method]+', '+name_holder[model_name])
-                if task != 'prediction' and feature_engineering_method != 'pca':
-                    try:
-                        dataset = oversampling(dataset,label)
-                        print('PCA Complete')
-                    except Exception as e:
-                        raise type(e)("Please check the data and label given properly")       
+                print('\nCurrent Combination : ' + ' ' +name_holder[feature_engineering_method]+', '+ name_holder[hpo_method]+', '+name_holder[model_name])    
                 if feature_engineering_method.startswith('anova') and anova_estimator:
                     try:
                         dataset = techniques_dict[feature_engineering_method](dataset, label, anova_estimator)
@@ -225,8 +223,9 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
                 elif feature_engineering_method == 'all_features':
                     print('All Features Considered')
                     pass
-                else:
+                elif feature_engineering_method=='pca':
                     dataset = techniques_dict[feature_engineering_method](dataset, label)
+                    print('PCA Complete')
 
                 #Model Training
                 if model_name=='LogisticRegression' and len(dataset[label].unique())>2:
@@ -236,12 +235,17 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
                     features = get_features(dataset, label)
                     X, Y = dataset[features], dataset[label]
                     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=test_size,random_state=random_state)
-                    model_metrics = get_model_metrics(model,label,task,X_test, Y_test)
+                    model_metrics = get_model_metrics(model,dataset[label],task,X_test, Y_test)
                     column_names = ['Estimator', 'Feature Engineering Method', 'Hyperparameter Optimization Method']
                     column_names.extend(list(model_metrics.keys()))
+                    column_names.append('Selected Features')
                     model_metrics = list(map(lambda value : round(value, 4), model_metrics.values()))
+                    
                     #change names
-                    stats.append([model,name_holder[model_name],name_holder[feature_engineering_method],name_holder[hpo_method]]+list(model_metrics))
+                    final_features = list(get_features(dataset, label))
+                    final_features = ', '.join([str(feature) for feature in final_features])
+                    stats.append([model,name_holder[model_name],name_holder[feature_engineering_method],name_holder[hpo_method]]+list(model_metrics)+[final_features])
+                
 
                 dataset = original_dataset.copy()
     
@@ -264,6 +268,7 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
 
     print()
     print(pd_stats)
+    print('\nYour New Features are: ',stats[0][-1])
 
     #Download excelsheet
     if excel_file:
@@ -271,4 +276,4 @@ def auto_trainer(dataset,label,task,feature_engineering_methods=default_feature_
 
     #Return statistics in form of dataframe and model
     print('Statistics and Topmost Model Returned')
-    return pd_stats,stats[0][0]
+    return stats[0][0],pd_stats,stats[0][-1]

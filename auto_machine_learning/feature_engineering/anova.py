@@ -98,7 +98,7 @@ def anova_classifier(dataset,label,anova_estimator='RandomForestClassifier'):
         model.fit(X_train,Y_train)
 
         Y_pred = model.predict(X_test)
-        score=metrics.f1_score(Y_test,Y_pred)
+        score=metrics.accuracy_score(Y_test,Y_pred)
 
         if score>max_score:
             max_score = score

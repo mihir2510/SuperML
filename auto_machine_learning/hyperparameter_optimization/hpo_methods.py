@@ -1,5 +1,5 @@
 from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
-from sklearn.metrics import r2_score, f1_score
+from sklearn.metrics import r2_score, f1_score, accuracy_score
 from skopt import BayesSearchCV
 from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
 from auto_machine_learning.utils import get_features
@@ -118,7 +118,7 @@ def bayesian_tpe(model, X_train, X_test, Y_train, Y_test, task, max_evals=100):
         hyperopt_model.fit(X_train, Y_train)
         Y_pred = hyperopt_model.predict(X_test)
 
-        loss = -r2_score(Y_test, Y_pred) if task == 'prediction' else -f1_score(Y_test, Y_pred)
+        loss = -r2_score(Y_test, Y_pred) if task == 'prediction' else -accuracy_score(Y_test, Y_pred)
         return {'loss': loss, 'status': STATUS_OK}
     
     try:

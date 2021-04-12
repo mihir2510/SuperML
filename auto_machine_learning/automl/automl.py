@@ -85,9 +85,7 @@ def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model
 
     # Feature Engineering
     features = get_features(prepocessed_dataset, label)
-    if (len(features) > 15):
-        feature_engineered_dataset = pca.pca(prepocessed_dataset, label)
-    elif task == 'prediction':
+    if task == 'prediction':
         feature_engineered_dataset = anova.anova_regressor(prepocessed_dataset, label)
     elif task == 'classification':
         feature_engineered_dataset = anova.anova_classifier(prepocessed_dataset, label)
@@ -95,6 +93,7 @@ def auto_ensemble(dataset, label, task, base_layer_models=None, meta_layer_model
         feature_engineered_dataset = prepocessed_dataset.copy()
 
     print('\nFeature Engineering performed\n')
+    print('Your New Features are:', get_features(feature_engineered_dataset,label))
 
     X_train, X_test, Y_train, Y_test = dataset_split(feature_engineered_dataset, label)
 
@@ -150,8 +149,9 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
                     excel_file(strig) : name of the file to be used for saving stats
 
             Returns:
-                    stats (dictionary): contains the metrics for given data
                     ensemble (model object) : trained superlearner model based on given metric
+                    stats (dictionary): contains the metrics for given data
+                    final features : List of the final features used for training
     '''
 
     # Data Preprocessing
@@ -162,20 +162,19 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
 
     # Feature Engineering
     features = get_features(prepocessed_dataset, label)
-    if (len(features) > 15):
-        feature_engineered_dataset = pca.pca(prepocessed_dataset, label)
-    elif task == 'prediction':
+    if task == 'prediction':
         feature_engineered_dataset = anova.anova_regressor(prepocessed_dataset, label)
     elif task == 'classification':
         feature_engineered_dataset = anova.anova_classifier(prepocessed_dataset, label)
     else:
         feature_engineered_dataset = prepocessed_dataset.copy()
     print('\nFeature Engineering performed\n')
+    print('Your New Features are:', get_features(feature_engineered_dataset,label))
 
     X_train, X_test, Y_train, Y_test = dataset_split(feature_engineered_dataset, label)
 
     # Ensembling
- 
+#REGRESSION---------------------------------------------------------------------------------- 
     if task == 'prediction':
         base_layer_models = ['LinearRegression', 'Ridge', 'Lasso', 'DecisionTreeRegressor', 'RandomForestRegressor', 'AdaBoostRegressor', 'ExtraTreesRegressor','BaggingRegressor','GradientBoostingRegressor'] if base_layer_models == None else base_layer_models
 
@@ -224,6 +223,7 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
                 temp.extend(list(stats))
                 stats_list.append(temp)
 
+#CLASSIFICATION----------------------------------------------------------------------------------
     elif task == 'classification':
         base_layer_models = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'BaggingClassifier', 'GradientBoostingClassifier'] if base_layer_models == None else base_layer_models
 
@@ -301,4 +301,7 @@ def automl_run(dataset, label, task, base_layer_models=None, meta_layer_models=N
 
     #Return statistics in form of dataframe and model
     print('Statistics and Topmost Model Returned')
-    return pd_stats,stats_list[0][0]
+    final_features = list(get_features(dataset, label))
+    final_features = ', '.join([str(feature) for feature in final_features])
+
+    return stats_list[0][0],pd_stats,final_features
