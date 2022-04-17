@@ -13,11 +13,12 @@
 </div>
 
 
-## How to Install
+* How to Install
 
 ```
 
 pip install auto-machine-learning
+
 
 ```
 
@@ -34,6 +35,13 @@ pip install auto-machine-learning
 	* Goto your fork and create a pull request.
 	* We will test your modifications and merge changes.
 
+<br>
+<br>
+
+* Documentation : 
+	<a href="https://superml-documentation.herokuapp.com/"> You can find Documentation here </a>
+	
+	
 <br>
 <br>
 
